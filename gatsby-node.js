@@ -1,5 +1,29 @@
 const path = require("path");
 
+/**
+ * @type {import('gatsby').GatsbyNode['onCreateWebpackConfig']}
+ */
+exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
+  if (stage === "build-html" || stage === "develop-html") {
+    actions.setWebpackConfig({
+      module: {
+        rules: [
+          {
+            // Exclude Konva and react-konva from SSR
+            test: /konva|react-konva/,
+            use: loaders.null(),
+          },
+          {
+            // Also exclude our CustomizationCanvas component that uses Konva
+            test: /CustomizationCanvas\.tsx$/,
+            use: loaders.null(),
+          },
+        ],
+      },
+    });
+  }
+};
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions;
   const productTemplate = path.resolve(`src/templates/product-template.tsx`);
