@@ -32,11 +32,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     Products
                   </Link>
                 </li>
-                <li>
-                  <Link to="/customize" className="hover:text-gray-200">
-                    Customize
-                  </Link>
-                </li>
+
                 <li>
                   <Link to="/about" className="hover:text-gray-200">
                     About
@@ -80,8 +76,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div>
               <h3 className="text-xl font-bold mb-4">Shin Shop</h3>
               <p>
-                Customizable shin pads for sports enthusiasts. Express yourself
-                with our unique designs and personalization options.
+                Premium shin pads for sports enthusiasts. High-quality protection
+                with stylish designs for athletes of all levels.
               </p>
             </div>
             <div>
@@ -97,11 +93,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     Products
                   </Link>
                 </li>
-                <li>
-                  <Link to="/customize" className="hover:text-gray-300">
-                    Customize
-                  </Link>
-                </li>
+
                 <li>
                   <Link to="/about" className="hover:text-gray-300">
                     About

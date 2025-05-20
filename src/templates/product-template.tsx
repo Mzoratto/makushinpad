@@ -138,16 +138,6 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
             >
               {selectedSize ? "Add to Cart" : "Please select a size"}
             </button>
-
-            {frontmatter.customizable && (
-              <Link
-                to={`/customize/${frontmatter.id}${selectedSize ? `?size=${selectedSize.code}` : ""}`}
-                className={`btn btn-secondary px-6 py-3 ${!selectedSize ? 'opacity-50 cursor-not-allowed' : ''}`}
-                onClick={e => !selectedSize && e.preventDefault()}
-              >
-                Customize
-              </Link>
-            )}
           </div>
         </div>
       </div>
@@ -168,8 +158,6 @@ export const query = graphql`
           code
           price
         }
-        customizable
-        customizationOptions
         image
       }
     }
