@@ -36,6 +36,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <script>
           {`
             // Initialize Snipcart settings and div BEFORE loading the script
+            // Force rebuild: ${new Date().toISOString()}
             window.SnipcartSettings = {
               publicApiKey: "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz",
               loadStrategy: "on-user-interaction",
