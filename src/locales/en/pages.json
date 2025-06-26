@@ -1,0 +1,122 @@
+{
+  "home": {
+    "title": "Shin Shop - Customizable Shin Pads",
+    "metaDescription": "Premium customizable shin pads for sports enthusiasts. Express yourself with our unique designs and personalization options.",
+    "hero": {
+      "title": "Express Yourself with Custom Shin Pads",
+      "subtitle": "Premium shin guards with your personal touch. Upload images, add text, and choose colors to create shin pads that are uniquely yours."
+    },
+    "featuredProducts": "Featured Designs",
+    "features": {
+      "title": "Why Choose Shin Shop?",
+      "customization": {
+        "title": "Full Customization",
+        "description": "Upload your own images, add text, and choose from a variety of colors and designs."
+      },
+      "quality": {
+        "title": "Premium Quality",
+        "description": "Made with high-grade materials that provide excellent protection and durability."
+      },
+      "fast": {
+        "title": "Fast Delivery",
+        "description": "Quick turnaround times to get your custom shin pads to you as soon as possible."
+      }
+    }
+  },
+  "about": {
+    "title": "About Us | Shin Shop",
+    "metaDescription": "Learn about Shin Shop, our mission, and our commitment to quality customizable shin pads.",
+    "pageTitle": "About Shin Shop",
+    "intro": "At Shin Shop, we're passionate about combining protection with personal expression. Our mission is to provide athletes with high-quality shin pads that not only offer superior protection but also allow them to showcase their unique style.",
+    "story": {
+      "title": "Our Story",
+      "content": "Founded by sports enthusiasts who understood the importance of both protection and self-expression, Shin Shop was born from the idea that athletic gear should be as unique as the athletes who wear it."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "content": "We believe that every athlete deserves gear that reflects their personality while providing the protection they need to perform at their best."
+    },
+    "quality": {
+      "title": "Quality Commitment",
+      "content": "Every shin pad is crafted with premium materials and undergoes rigorous quality testing to ensure maximum protection and durability."
+    }
+  },
+  "contact": {
+    "title": "Contact Us | Shin Shop",
+    "metaDescription": "Get in touch with Shin Shop for questions about our customizable shin pads, orders, or customer support.",
+    "pageTitle": "Contact Us",
+    "subtitle": "Have questions about our products or need help with your order? We're here to help!",
+    "form": {
+      "title": "Send Us a Message",
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "namePlaceholder": "Your name",
+      "emailPlaceholder": "your.email@example.com",
+      "subjectPlaceholder": "What can we help you with?",
+      "messagePlaceholder": "Tell us more about your inquiry...",
+      "successMessage": "Thank you for your message! We'll get back to you soon."
+    },
+    "info": {
+      "title": "Get in Touch",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "hours": "Business Hours"
+    }
+  },
+  "products": {
+    "title": "Products | Shin Shop",
+    "metaDescription": "Browse our collection of customizable shin pads. High-quality protection with personalization options.",
+    "pageTitle": "Our Products",
+    "subtitle": "Discover our collection of premium shin pads, each designed for maximum protection and style.",
+    "filters": {
+      "all": "All Products",
+      "featured": "Featured",
+      "newArrivals": "New Arrivals",
+      "bestSellers": "Best Sellers"
+    },
+    "sortBy": "Sort by",
+    "sortOptions": {
+      "name": "Name",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "newest": "Newest First"
+    }
+  },
+  "customize": {
+    "title": "Customize Your Shin Pads | Shin Shop",
+    "metaDescription": "Create your perfect shin pads with our customization tool. Upload images, add text, and choose colors.",
+    "pageTitle": "Customize Your Shin Pads",
+    "subtitle": "Create shin pads that are uniquely yours with our interactive customization tool.",
+    "steps": {
+      "selectProduct": "Select Product",
+      "chooseSize": "Choose Size",
+      "customize": "Customize",
+      "review": "Review"
+    },
+    "productSelection": {
+      "title": "Choose Your Base Design",
+      "description": "Select a shin pad design to start customizing"
+    },
+    "sizeSelection": {
+      "title": "Select Size",
+      "description": "Choose the perfect size for your shin pads"
+    },
+    "customization": {
+      "title": "Personalize Your Design",
+      "uploadImage": "Upload Image",
+      "addText": "Add Text",
+      "textPlaceholder": "Enter your text",
+      "colors": "Colors",
+      "preview": "Interactive Preview"
+    }
+  },
+  "404": {
+    "title": "Page Not Found | Shin Shop",
+    "heading": "404 - Page Not Found",
+    "message": "Sorry, the page you are looking for doesn't exist.",
+    "backHome": "Back to Home"
+  }
+}

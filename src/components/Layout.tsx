@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
 import { Link } from "gatsby";
 import { Helmet } from "react-helmet";
+import { useI18next } from "gatsby-plugin-react-i18next";
+import LanguageSwitcher from "./LanguageSwitcher";
 import "../styles/global.css";
 
 interface LayoutProps {
@@ -8,6 +10,12 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { t, i18n } = useI18next();
+
+  // Get current language and currency
+  const currentLanguage = i18n.language || 'en';
+  const currency = currentLanguage === 'cz' ? 'CZK' : 'USD';
+
   return (
     <div className="flex flex-col min-h-screen">
       <Helmet>
@@ -18,56 +26,59 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="container-custom py-4">
           <div className="flex justify-between items-center">
             <Link to="/" className="text-2xl font-bold">
-              Shin Shop
+              {t('common:site.title')}
             </Link>
-            <nav>
-              <ul className="flex space-x-6">
-                <li>
-                  <Link to="/" className="hover:text-gray-200">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/products" className="hover:text-gray-200">
-                    Products
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/customize" className="hover:text-gray-200">
-                    Customize
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/about" className="hover:text-gray-200">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="hover:text-gray-200">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <button className="snipcart-checkout flex items-center hover:text-gray-200">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                    Cart (<span className="snipcart-items-count">0</span>)
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            <div className="flex items-center space-x-6">
+              <nav>
+                <ul className="flex space-x-6">
+                  <li>
+                    <Link to="/" className="hover:text-gray-200">
+                      {t('common:navigation.home')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/products" className="hover:text-gray-200">
+                      {t('common:navigation.products')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/customize" className="hover:text-gray-200">
+                      {t('common:navigation.customize')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/about" className="hover:text-gray-200">
+                      {t('common:navigation.about')}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/contact" className="hover:text-gray-200">
+                      {t('common:navigation.contact')}
+                    </Link>
+                  </li>
+                  <li>
+                    <button className="snipcart-checkout flex items-center hover:text-gray-200">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                      {t('common:navigation.cart')} (<span className="snipcart-items-count">0</span>)
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </header>
@@ -78,44 +89,43 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-xl font-bold mb-4">Shin Shop</h3>
+              <h3 className="text-xl font-bold mb-4">{t('common:site.title')}</h3>
               <p>
-                Premium customizable shin pads for sports enthusiasts. Express yourself
-                with our unique designs and personalization options.
+                {t('common:footer.description')}
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+              <h3 className="text-xl font-bold mb-4">{t('common:footer.quickLinks')}</h3>
               <ul className="space-y-2">
                 <li>
                   <Link to="/" className="hover:text-gray-300">
-                    Home
+                    {t('common:navigation.home')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/products" className="hover:text-gray-300">
-                    Products
+                    {t('common:navigation.products')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/customize" className="hover:text-gray-300">
-                    Customize
+                    {t('common:navigation.customize')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/about" className="hover:text-gray-300">
-                    About
+                    {t('common:navigation.about')}
                   </Link>
                 </li>
                 <li>
                   <Link to="/contact" className="hover:text-gray-300">
-                    Contact
+                    {t('common:navigation.contact')}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-4">Contact Us</h3>
+              <h3 className="text-xl font-bold mb-4">{t('common:navigation.contact')}</h3>
               <p>Email: info@shinshop.com</p>
               <p>Phone: (123) 456-7890</p>
               <div className="flex space-x-4 mt-4">
@@ -164,13 +174,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
           <div className="mt-8 border-t border-gray-700 pt-8 text-center">
-            <p>&copy; {new Date().getFullYear()} Shin Shop. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} {t('common:site.title')}. {t('common:footer.copyright')}</p>
           </div>
         </div>
       </footer>
 
       {/* Snipcart container */}
-      <div hidden id="snipcart" data-api-key="MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz"></div>
+      <div
+        hidden
+        id="snipcart"
+        data-api-key={process.env.GATSBY_SNIPCART_API_KEY || "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz"}
+        data-config-modal-style="side"
+        data-config-add-product-behavior="none"
+        data-currency={currency}
+        data-locale={currentLanguage}
+      ></div>
     </div>
   );
 };

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
+import { graphql } from "gatsby";
+import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 
 const ContactPage: React.FC = () => {
+  const { t } = useI18next();
+
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -36,7 +40,7 @@ const ContactPage: React.FC = () => {
     setFormStatus({
       submitted: true,
       success: true,
-      message: "Thank you for your message! We'll get back to you soon.",
+      message: t('pages:contact.form.successMessage'),
     });
     // Reset form
     setFormState({
@@ -50,38 +54,36 @@ const ContactPage: React.FC = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Contact Us | Shin Shop</title>
+        <title>{t('pages:contact.title')}</title>
         <meta
           name="description"
-          content="Get in touch with Shin Shop for questions about our customizable shin pads or to request support."
+          content={t('pages:contact.metaDescription')}
         />
       </Helmet>
 
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Contact Us</h1>
+        <h1 className="text-3xl font-bold mb-6">{t('pages:contact.pageTitle')}</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <div className="prose prose-lg">
               <p>
-                We'd love to hear from you! Whether you have questions about our
-                products, need help with an order, or want to discuss custom
-                team designs, our team is here to help.
+                {t('pages:contact.subtitle')}
               </p>
 
               <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-2">Contact Information</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('pages:contact.info.title')}</h3>
                 <p>
-                  <strong>Email:</strong> info@shinshop.com
+                  <strong>{t('pages:contact.info.email')}:</strong> info@shinshop.com
                   <br />
-                  <strong>Phone:</strong> (123) 456-7890
+                  <strong>{t('pages:contact.info.phone')}:</strong> (123) 456-7890
                   <br />
-                  <strong>Address:</strong> 123 Shin Guard Lane, Sports City, SC 12345
+                  <strong>{t('pages:contact.info.address')}:</strong> 123 Shin Guard Lane, Sports City, SC 12345
                 </p>
               </div>
 
               <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-2">Business Hours</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('pages:contact.info.hours')}</h3>
                 <p>
                   <strong>Monday-Friday:</strong> 9:00 AM - 6:00 PM EST
                   <br />
@@ -92,7 +94,7 @@ const ContactPage: React.FC = () => {
               </div>
 
               <div className="mt-8">
-                <h3 className="text-xl font-semibold mb-2">Follow Us</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('common:footer.followUs')}</h3>
                 <div className="flex space-x-4">
                   <a href="#" className="text-primary hover:text-secondary">
                     <span className="sr-only">Facebook</span>
@@ -141,7 +143,7 @@ const ContactPage: React.FC = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Send Us a Message</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('pages:contact.form.title')}</h2>
 
             {formStatus.submitted ? (
               <div
@@ -155,7 +157,7 @@ const ContactPage: React.FC = () => {
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-                    Your Name
+                    {t('pages:contact.form.name')}
                   </label>
                   <input
                     type="text"
@@ -164,13 +166,14 @@ const ContactPage: React.FC = () => {
                     value={formState.name}
                     onChange={handleChange}
                     required
+                    placeholder={t('pages:contact.form.namePlaceholder')}
                     className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                 </div>
 
                 <div className="mb-4">
                   <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-                    Email Address
+                    {t('pages:contact.form.email')}
                   </label>
                   <input
                     type="email"
@@ -179,13 +182,14 @@ const ContactPage: React.FC = () => {
                     value={formState.email}
                     onChange={handleChange}
                     required
+                    placeholder={t('pages:contact.form.emailPlaceholder')}
                     className="w-full border border-gray-300 rounded px-3 py-2"
                   />
                 </div>
 
                 <div className="mb-4">
                   <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
-                    Subject
+                    {t('pages:contact.form.subject')}
                   </label>
                   <select
                     id="subject"
@@ -195,7 +199,7 @@ const ContactPage: React.FC = () => {
                     required
                     className="w-full border border-gray-300 rounded px-3 py-2"
                   >
-                    <option value="">Select a subject</option>
+                    <option value="">{t('pages:contact.form.subjectPlaceholder')}</option>
                     <option value="Product Inquiry">Product Inquiry</option>
                     <option value="Order Status">Order Status</option>
                     <option value="Customization Help">Customization Help</option>
@@ -206,7 +210,7 @@ const ContactPage: React.FC = () => {
 
                 <div className="mb-4">
                   <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
-                    Message
+                    {t('pages:contact.form.message')}
                   </label>
                   <textarea
                     id="message"
@@ -215,12 +219,13 @@ const ContactPage: React.FC = () => {
                     onChange={handleChange}
                     required
                     rows={5}
+                    placeholder={t('pages:contact.form.messagePlaceholder')}
                     className="w-full border border-gray-300 rounded px-3 py-2"
                   ></textarea>
                 </div>
 
                 <button type="submit" className="btn btn-primary w-full">
-                  Send Message
+                  {t('common:buttons.sendMessage')}
                 </button>
               </form>
             )}
@@ -230,5 +235,19 @@ const ContactPage: React.FC = () => {
     </Layout>
   );
 };
+
+export const query = graphql`
+  query ($language: String!) {
+    locales: allLocale(filter: {language: {eq: $language}}) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
+  }
+`;
 
 export default ContactPage;

@@ -1,0 +1,64 @@
+{
+  "labels": {
+    "price": "Price",
+    "size": "Size",
+    "color": "Color",
+    "material": "Material",
+    "weight": "Weight",
+    "dimensions": "Dimensions",
+    "features": "Features",
+    "description": "Description",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "rating": "Rating",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "limitedStock": "Limited Stock"
+  },
+  "sizes": {
+    "S": "Small",
+    "M": "Medium",
+    "L": "Large",
+    "XL": "Extra Large"
+  },
+  "features": {
+    "lightweight": "Lightweight",
+    "durable": "Durable",
+    "breathable": "Breathable",
+    "comfortable": "Comfortable",
+    "protective": "High Protection",
+    "customizable": "Fully Customizable",
+    "waterproof": "Water Resistant",
+    "antimicrobial": "Antimicrobial"
+  },
+  "materials": {
+    "carbon": "Carbon Fiber",
+    "plastic": "High-Grade Plastic",
+    "foam": "EVA Foam",
+    "fabric": "Moisture-Wicking Fabric"
+  },
+  "categories": {
+    "professional": "Professional",
+    "recreational": "Recreational",
+    "youth": "Youth",
+    "custom": "Custom Design"
+  },
+  "actions": {
+    "selectSize": "Select Size",
+    "selectColor": "Select Color",
+    "customize": "Customize This Design",
+    "viewDetails": "View Details",
+    "quickView": "Quick View",
+    "compare": "Compare",
+    "addToWishlist": "Add to Wishlist"
+  },
+  "messages": {
+    "selectSizeFirst": "Please select a size first",
+    "addedToCart": "Added to cart successfully!",
+    "errorAddingToCart": "Error adding item to cart",
+    "customizationRequired": "This product requires customization",
+    "textTooLong": "Text must be 20 characters or less",
+    "imageTooLarge": "Image size must be less than 5MB",
+    "invalidImageType": "Please upload an image file (JPEG, PNG, GIF)"
+  }
+}

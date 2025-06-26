@@ -1,0 +1,122 @@
+{
+  "home": {
+    "title": "Shin Shop - Přizpůsobitelné chrániče holení",
+    "metaDescription": "Prémiové přizpůsobitelné chrániče holení pro sportovní nadšence. Vyjádřete sebe pomocí našich jedinečných designů a možností personalizace.",
+    "hero": {
+      "title": "Vyjádřete sebe pomocí vlastních chráničů holení",
+      "subtitle": "Prémiové chrániče holení s vaším osobním dotykem. Nahrajte obrázky, přidejte text a vyberte barvy pro vytvoření chráničů, které jsou jedinečně vaše."
+    },
+    "featuredProducts": "Doporučené designy",
+    "features": {
+      "title": "Proč si vybrat Shin Shop?",
+      "customization": {
+        "title": "Úplné přizpůsobení",
+        "description": "Nahrajte vlastní obrázky, přidejte text a vyberte z různých barev a designů."
+      },
+      "quality": {
+        "title": "Prémiová kvalita",
+        "description": "Vyrobeno z vysoce kvalitních materiálů, které poskytují vynikající ochranu a trvanlivost."
+      },
+      "fast": {
+        "title": "Rychlé doručení",
+        "description": "Rychlé zpracování, abychom vám vaše vlastní chrániče holení dodali co nejdříve."
+      }
+    }
+  },
+  "about": {
+    "title": "O nás | Shin Shop",
+    "metaDescription": "Dozvědět se více o Shin Shop, naší misi a našem závazku k kvalitním přizpůsobitelným chráničům holení.",
+    "pageTitle": "O Shin Shop",
+    "intro": "Ve Shin Shop jsme vášniví pro kombinaci ochrany s osobním vyjádřením. Naší misí je poskytovat sportovcům vysoce kvalitní chrániče holení, které nejen nabízejí vynikající ochranu, ale také jim umožňují ukázat svůj jedinečný styl.",
+    "story": {
+      "title": "Náš příběh",
+      "content": "Založen sportovními nadšenci, kteří chápali důležitost jak ochrany, tak sebevyjádření, Shin Shop vznikl z myšlenky, že sportovní vybavení by mělo být tak jedinečné jako sportovci, kteří ho nosí."
+    },
+    "mission": {
+      "title": "Naše mise",
+      "content": "Věříme, že každý sportovec si zaslouží vybavení, které odráží jeho osobnost a zároveň poskytuje ochranu potřebnou k podání nejlepšího výkonu."
+    },
+    "quality": {
+      "title": "Závazek kvality",
+      "content": "Každý chránič holení je vyroben z prémiových materiálů a prochází přísným testováním kvality pro zajištění maximální ochrany a trvanlivosti."
+    }
+  },
+  "contact": {
+    "title": "Kontaktujte nás | Shin Shop",
+    "metaDescription": "Spojte se se Shin Shop pro otázky o našich přizpůsobitelných chráničích holení, objednávkách nebo zákaznické podpoře.",
+    "pageTitle": "Kontaktujte nás",
+    "subtitle": "Máte otázky o našich produktech nebo potřebujete pomoc s objednávkou? Jsme tu, abychom pomohli!",
+    "form": {
+      "title": "Pošlete nám zprávu",
+      "name": "Jméno",
+      "email": "Email",
+      "subject": "Předmět",
+      "message": "Zpráva",
+      "namePlaceholder": "Vaše jméno",
+      "emailPlaceholder": "vas.email@priklad.cz",
+      "subjectPlaceholder": "S čím vám můžeme pomoci?",
+      "messagePlaceholder": "Řekněte nám více o vašem dotazu...",
+      "successMessage": "Děkujeme za vaši zprávu! Brzy se vám ozveme."
+    },
+    "info": {
+      "title": "Spojte se s námi",
+      "email": "Email",
+      "phone": "Telefon",
+      "address": "Adresa",
+      "hours": "Pracovní doba"
+    }
+  },
+  "products": {
+    "title": "Produkty | Shin Shop",
+    "metaDescription": "Procházejte naši kolekci přizpůsobitelných chráničů holení. Vysoce kvalitní ochrana s možnostmi personalizace.",
+    "pageTitle": "Naše produkty",
+    "subtitle": "Objevte naši kolekci prémiových chráničů holení, každý navržený pro maximální ochranu a styl.",
+    "filters": {
+      "all": "Všechny produkty",
+      "featured": "Doporučené",
+      "newArrivals": "Novinky",
+      "bestSellers": "Nejprodávanější"
+    },
+    "sortBy": "Seřadit podle",
+    "sortOptions": {
+      "name": "Název",
+      "priceAsc": "Cena: Od nejnižší",
+      "priceDesc": "Cena: Od nejvyšší",
+      "newest": "Nejnovější první"
+    }
+  },
+  "customize": {
+    "title": "Přizpůsobte si chrániče holení | Shin Shop",
+    "metaDescription": "Vytvořte si perfektní chrániče holení pomocí našeho nástroje pro přizpůsobení. Nahrajte obrázky, přidejte text a vyberte barvy.",
+    "pageTitle": "Přizpůsobte si chrániče holení",
+    "subtitle": "Vytvořte chrániče holení, které jsou jedinečně vaše, pomocí našeho interaktivního nástroje pro přizpůsobení.",
+    "steps": {
+      "selectProduct": "Vybrat produkt",
+      "chooseSize": "Vybrat velikost",
+      "customize": "Přizpůsobit",
+      "review": "Zkontrolovat"
+    },
+    "productSelection": {
+      "title": "Vyberte základní design",
+      "description": "Vyberte design chráničů holení pro začátek přizpůsobení"
+    },
+    "sizeSelection": {
+      "title": "Vyberte velikost",
+      "description": "Vyberte perfektní velikost pro vaše chrániče holení"
+    },
+    "customization": {
+      "title": "Personalizujte svůj design",
+      "uploadImage": "Nahrát obrázek",
+      "addText": "Přidat text",
+      "textPlaceholder": "Zadejte váš text",
+      "colors": "Barvy",
+      "preview": "Interaktivní náhled"
+    }
+  },
+  "404": {
+    "title": "Stránka nenalezena | Shin Shop",
+    "heading": "404 - Stránka nenalezena",
+    "message": "Omlouváme se, stránka kterou hledáte neexistuje.",
+    "backHome": "Zpět domů"
+  }
+}

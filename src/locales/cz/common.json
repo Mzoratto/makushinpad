@@ -1,0 +1,67 @@
+{
+  "site": {
+    "title": "Shin Shop",
+    "description": "Prémiové přizpůsobitelné chrániče holení pro sportovní nadšence. Vyjádřete sebe pomocí našich jedinečných designů a možností personalizace."
+  },
+  "navigation": {
+    "home": "Domů",
+    "products": "Produkty",
+    "customize": "Přizpůsobit",
+    "about": "O nás",
+    "contact": "Kontakt",
+    "cart": "Košík"
+  },
+  "buttons": {
+    "shopCollection": "Nakupovat kolekci",
+    "startCustomizing": "Začít přizpůsobovat",
+    "viewAll": "Zobrazit vše",
+    "addToCart": "Přidat do košíku",
+    "buyNow": "Koupit nyní",
+    "learnMore": "Dozvědět se více",
+    "getStarted": "Začít",
+    "sendMessage": "Odeslat zprávu",
+    "submit": "Odeslat",
+    "reset": "Resetovat",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "back": "Zpět",
+    "next": "Další",
+    "finish": "Dokončit"
+  },
+  "footer": {
+    "description": "Prémiové přizpůsobitelné chrániče holení pro sportovní nadšence. Vyjádřete sebe pomocí našich jedinečných designů a možností personalizace.",
+    "quickLinks": "Rychlé odkazy",
+    "customerService": "Zákaznický servis",
+    "followUs": "Sledujte nás",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Přihlaste se k odběru novinek o nových produktech a exkluzivních nabídkách.",
+    "emailPlaceholder": "Zadejte váš email",
+    "subscribe": "Přihlásit se",
+    "copyright": "Všechna práva vyhrazena.",
+    "privacyPolicy": "Zásady ochrany osobních údajů",
+    "termsOfService": "Obchodní podmínky",
+    "shippingInfo": "Informace o dopravě",
+    "returns": "Vrácení zboží"
+  },
+  "language": {
+    "switch": "Změnit jazyk",
+    "english": "Angličtina",
+    "czech": "Čeština"
+  },
+  "currency": {
+    "symbol": "Kč",
+    "code": "CZK"
+  },
+  "sizes": {
+    "small": "Malá",
+    "medium": "Střední",
+    "large": "Velká",
+    "extraLarge": "Extra velká"
+  },
+  "status": {
+    "loading": "Načítání...",
+    "error": "Chyba",
+    "success": "Úspěch",
+    "notFound": "Nenalezeno"
+  }
+}

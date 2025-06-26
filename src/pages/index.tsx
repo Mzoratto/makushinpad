@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, graphql, PageProps } from "gatsby";
+import { Link, PageProps, graphql } from "gatsby";
 import { Helmet } from "react-helmet";
+import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import ProductCard from "../components/ProductCard";
 
@@ -27,12 +28,13 @@ interface IndexPageProps extends PageProps {
 
 const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
   const featuredProducts = data.featured.edges;
+  const { t } = useI18next();
 
   return (
     <Layout>
       <Helmet>
-        <title>Shin Shop - Customizable Shin Pads</title>
-        <meta name="description" content="Premium customizable shin pads for sports enthusiasts. Express yourself with our unique designs and personalization options." />
+        <title>{t('pages:home.title')}</title>
+        <meta name="description" content={t('pages:home.metaDescription')} />
       </Helmet>
 
       {/* Hero Section */}
@@ -41,17 +43,17 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Express Yourself with Custom Shin Pads
+                {t('pages:home.hero.title')}
               </h1>
               <p className="text-lg mb-6">
-                Premium shin guards with your personal touch. Upload images, add text, and choose colors to create shin pads that are uniquely yours.
+                {t('pages:home.hero.subtitle')}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/products" className="btn bg-white text-primary hover:bg-gray-100">
-                  Shop Collection
+                  {t('common:buttons.shopCollection')}
                 </Link>
                 <Link to="/customize" className="btn bg-accent text-white hover:bg-opacity-90">
-                  Start Customizing
+                  {t('common:buttons.startCustomizing')}
                 </Link>
               </div>
             </div>
@@ -68,9 +70,9 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
       {/* Featured Products */}
       <div className="mb-16">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Featured Designs</h2>
+          <h2 className="text-2xl font-bold">{t('pages:home.featuredProducts')}</h2>
           <Link to="/products" className="text-primary hover:underline">
-            View All
+            {t('common:buttons.viewAll')}
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -90,7 +92,7 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
 
       {/* Features Section */}
       <div className="mb-16">
-        <h2 className="text-2xl font-bold mb-6 text-center">Why Choose Our Shin Pads</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">{t('pages:home.features.title')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <div className="bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -98,9 +100,9 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Premium Quality</h3>
+            <h3 className="text-xl font-semibold mb-2">{t('pages:home.features.quality.title')}</h3>
             <p className="text-gray-600">
-              Made with high-grade materials for durability and protection during intense gameplay.
+              {t('pages:home.features.quality.description')}
             </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
@@ -109,9 +111,9 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Fully Customizable</h3>
+            <h3 className="text-xl font-semibold mb-2">{t('pages:home.features.customization.title')}</h3>
             <p className="text-gray-600">
-              Add your personal touch with custom images, text, and colors to make them uniquely yours.
+              {t('pages:home.features.customization.description')}
             </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
@@ -120,9 +122,9 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
+            <h3 className="text-xl font-semibold mb-2">{t('pages:home.features.fast.title')}</h3>
             <p className="text-gray-600">
-              Quick production and shipping to get your custom shin pads to you when you need them.
+              {t('pages:home.features.fast.description')}
             </p>
           </div>
         </div>
@@ -134,7 +136,16 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
 };
 
 export const query = graphql`
-  query {
+  query ($language: String!) {
+    locales: allLocale(filter: {language: {eq: $language}}) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     featured: allMarkdownRemark(
       filter: { frontmatter: { featured: { eq: true } } }
       limit: 3

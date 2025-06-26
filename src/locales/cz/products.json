@@ -1,0 +1,64 @@
+{
+  "labels": {
+    "price": "Cena",
+    "size": "Velikost",
+    "color": "Barva",
+    "material": "Materiál",
+    "weight": "Hmotnost",
+    "dimensions": "Rozměry",
+    "features": "Vlastnosti",
+    "description": "Popis",
+    "specifications": "Specifikace",
+    "reviews": "Recenze",
+    "rating": "Hodnocení",
+    "inStock": "Skladem",
+    "outOfStock": "Není skladem",
+    "limitedStock": "Omezené množství"
+  },
+  "sizes": {
+    "S": "Malá",
+    "M": "Střední",
+    "L": "Velká",
+    "XL": "Extra velká"
+  },
+  "features": {
+    "lightweight": "Lehký",
+    "durable": "Odolný",
+    "breathable": "Prodyšný",
+    "comfortable": "Pohodlný",
+    "protective": "Vysoká ochrana",
+    "customizable": "Plně přizpůsobitelný",
+    "waterproof": "Vodoodpudivý",
+    "antimicrobial": "Antimikrobiální"
+  },
+  "materials": {
+    "carbon": "Uhlíkové vlákno",
+    "plastic": "Vysoce kvalitní plast",
+    "foam": "EVA pěna",
+    "fabric": "Odvlhčovací tkanina"
+  },
+  "categories": {
+    "professional": "Profesionální",
+    "recreational": "Rekreační",
+    "youth": "Mládežnické",
+    "custom": "Vlastní design"
+  },
+  "actions": {
+    "selectSize": "Vybrat velikost",
+    "selectColor": "Vybrat barvu",
+    "customize": "Přizpůsobit tento design",
+    "viewDetails": "Zobrazit detaily",
+    "quickView": "Rychlý náhled",
+    "compare": "Porovnat",
+    "addToWishlist": "Přidat do seznamu přání"
+  },
+  "messages": {
+    "selectSizeFirst": "Nejprve prosím vyberte velikost",
+    "addedToCart": "Úspěšně přidáno do košíku!",
+    "errorAddingToCart": "Chyba při přidávání položky do košíku",
+    "customizationRequired": "Tento produkt vyžaduje přizpůsobení",
+    "textTooLong": "Text musí mít maximálně 20 znaků",
+    "imageTooLarge": "Velikost obrázku musí být menší než 5MB",
+    "invalidImageType": "Prosím nahrajte obrázek (JPEG, PNG, GIF)"
+  }
+}

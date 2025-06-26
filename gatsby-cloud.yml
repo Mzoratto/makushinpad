@@ -1,0 +1,65 @@
+# Gatsby Cloud Configuration for Shin Shop
+# This file optimizes builds and deployment for Gatsby Cloud
+
+# Build Configuration
+build:
+  # Use Node.js 20.x for compatibility
+  node_version: "20"
+  
+  # Build command
+  command: "npm run build"
+  
+  # Publish directory
+  publish: "public"
+  
+  # Environment variables (set these in Gatsby Cloud dashboard)
+  environment:
+    NODE_ENV: "production"
+    GATSBY_SNIPCART_API_KEY: "$GATSBY_SNIPCART_API_KEY"
+    GATSBY_SITE_URL: "$GATSBY_SITE_URL"
+
+# Performance Optimizations
+performance:
+  # Enable incremental builds
+  incremental_builds: true
+  
+  # Cache node_modules
+  cache_node_modules: true
+  
+  # Enable parallel processing
+  parallel: true
+
+# Preview Configuration
+preview:
+  # Enable preview builds for pull requests
+  enabled: true
+  
+  # Preview environment variables
+  environment:
+    NODE_ENV: "development"
+    GATSBY_SNIPCART_API_KEY: "$GATSBY_SNIPCART_TEST_API_KEY"
+
+# Redirects and Headers
+redirects:
+  # Redirect root to default language
+  - from: "/"
+    to: "/en/"
+    status: 302
+    
+  # Redirect old URLs if needed
+  # - from: "/old-path"
+  #   to: "/new-path"
+  #   status: 301
+
+# Security Headers
+headers:
+  - for: "/*"
+    values:
+      X-Frame-Options: "DENY"
+      X-Content-Type-Options: "nosniff"
+      Referrer-Policy: "strict-origin-when-cross-origin"
+      
+  # Snipcart specific headers
+  - for: "/*"
+    values:
+      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.snipcart.com; style-src 'self' 'unsafe-inline' https://cdn.snipcart.com; img-src 'self' data: https:; connect-src 'self' https://app.snipcart.com;"

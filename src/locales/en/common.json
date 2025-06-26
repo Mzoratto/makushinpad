@@ -1,0 +1,67 @@
+{
+  "site": {
+    "title": "Shin Shop",
+    "description": "Premium customizable shin pads for sports enthusiasts. Express yourself with our unique designs and personalization options."
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "customize": "Customize",
+    "about": "About",
+    "contact": "Contact",
+    "cart": "Cart"
+  },
+  "buttons": {
+    "shopCollection": "Shop Collection",
+    "startCustomizing": "Start Customizing",
+    "viewAll": "View All",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "sendMessage": "Send Message",
+    "submit": "Submit",
+    "reset": "Reset",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish"
+  },
+  "footer": {
+    "description": "Premium customizable shin pads for sports enthusiasts. Express yourself with our unique designs and personalization options.",
+    "quickLinks": "Quick Links",
+    "customerService": "Customer Service",
+    "followUs": "Follow Us",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Subscribe to get updates on new products and exclusive offers.",
+    "emailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "copyright": "All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "shippingInfo": "Shipping Info",
+    "returns": "Returns"
+  },
+  "language": {
+    "switch": "Switch Language",
+    "english": "English",
+    "czech": "Czech"
+  },
+  "currency": {
+    "symbol": "$",
+    "code": "USD"
+  },
+  "sizes": {
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large",
+    "extraLarge": "Extra Large"
+  },
+  "status": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "notFound": "Not Found"
+  }
+}

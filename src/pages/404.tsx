@@ -1,34 +1,51 @@
 import React from "react";
-import { Link, HeadFC, PageProps } from "gatsby";
+import { Link, HeadFC, PageProps, graphql } from "gatsby";
+import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import { Helmet } from "react-helmet";
 
 const NotFoundPage: React.FC<PageProps> = () => {
+  const { t } = useI18next();
+
   return (
     <Layout>
       <Helmet>
-        <title>Page Not Found | Shin Shop</title>
-        <meta name="description" content="The page you're looking for doesn't exist." />
+        <title>{t('pages:404.title')}</title>
+        <meta name="description" content={t('pages:404.message')} />
       </Helmet>
-      
+
       <div className="text-center py-16">
         <h1 className="text-6xl font-bold text-primary mb-4">404</h1>
-        <h2 className="text-3xl font-semibold mb-6">Page Not Found</h2>
+        <h2 className="text-3xl font-semibold mb-6">{t('pages:404.heading')}</h2>
         <p className="text-xl text-gray-600 mb-8">
-          Sorry, we couldn't find the page you're looking for.
+          {t('pages:404.message')}
         </p>
         <div className="flex justify-center space-x-4">
           <Link to="/" className="btn btn-primary">
-            Go Home
+            {t('pages:404.backHome')}
           </Link>
           <Link to="/products" className="btn btn-secondary">
-            Browse Products
+            {t('common:navigation.products')}
           </Link>
         </div>
       </div>
     </Layout>
   );
 };
+
+export const query = graphql`
+  query ($language: String!) {
+    locales: allLocale(filter: {language: {eq: $language}}) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
+  }
+`;
 
 export default NotFoundPage;
 

@@ -1,5 +1,6 @@
 import React from "react";
-import { graphql, PageProps } from "gatsby";
+import { PageProps, graphql } from "gatsby";
+import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import ProductCard from "../components/ProductCard";
 import { Helmet } from "react-helmet";
@@ -27,18 +28,19 @@ interface ProductsPageProps extends PageProps {
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ data }) => {
   const products = data.allMarkdownRemark.edges;
+  const { t } = useI18next();
 
   return (
     <Layout>
       <Helmet>
-        <title>Products | Shin Shop</title>
-        <meta name="description" content="Browse our collection of customizable shin pads" />
+        <title>{t('pages:products.title')}</title>
+        <meta name="description" content={t('pages:products.metaDescription')} />
       </Helmet>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Our Shin Pad Collection</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('pages:products.pageTitle')}</h1>
         <p className="text-gray-600">
-          Browse our selection of high-quality, customizable shin pads. Each design can be personalized with your own images and text.
+          {t('pages:products.subtitle')}
         </p>
       </div>
 
@@ -60,7 +62,16 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ data }) => {
 };
 
 export const query = graphql`
-  query {
+  query ($language: String!) {
+    locales: allLocale(filter: {language: {eq: $language}}) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     allMarkdownRemark(sort: { frontmatter: { title: ASC } }) {
       edges {
         node {

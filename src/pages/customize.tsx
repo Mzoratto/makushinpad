@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { graphql, useStaticQuery } from "gatsby";
+import { graphql, PageProps } from "gatsby";
 import { Helmet } from "react-helmet";
+import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import CustomizationPlaceholder from "../components/CustomizationPlaceholder";
 import type { CustomElement } from "../components/CustomizationCanvas";
@@ -23,7 +24,41 @@ interface Product {
 
 // Using CustomElement type imported from CustomizationCanvas component
 
-const CustomizePage: React.FC = () => {
+interface CustomizePageProps extends PageProps {
+  data: {
+    locales: {
+      edges: Array<{
+        node: {
+          ns: string;
+          data: string;
+          language: string;
+        };
+      }>;
+    };
+    allMarkdownRemark: {
+      edges: Array<{
+        node: {
+          frontmatter: {
+            id: string;
+            title: string;
+            slug: string;
+            defaultPrice: number;
+            sizes: Array<{
+              name: string;
+              code: string;
+              price: number;
+            }>;
+            image: string;
+          };
+        };
+      }>;
+    };
+  };
+}
+
+const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
+  const { t } = useI18next();
+
   // State for customization options
   const [selectedProductId, setSelectedProductId] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
@@ -44,32 +79,6 @@ const CustomizePage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const transformerRef = useRef<any>(null);
   const stageRef = useRef<any>(null);
-
-  // Fetch all products data
-  const data = useStaticQuery(graphql`
-    query {
-      allMarkdownRemark(
-        filter: { frontmatter: { customizable: { eq: true } } }
-      ) {
-        edges {
-          node {
-            frontmatter {
-              id
-              title
-              slug
-              defaultPrice
-              sizes {
-                name
-                code
-                price
-              }
-              image
-            }
-          }
-        }
-      }
-    }
-  `);
 
   // Transform the data into a more usable format
   const products: Product[] = data.allMarkdownRemark.edges.map(
@@ -144,7 +153,7 @@ const CustomizePage: React.FC = () => {
       setCustomText(text);
       setErrorMessage("");
     } else {
-      setErrorMessage("Text must be 20 characters or less");
+      setErrorMessage(t('products:messages.textTooLong'));
     }
   };
 
@@ -169,7 +178,7 @@ const CustomizePage: React.FC = () => {
     if (file) {
       // Check file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setErrorMessage("Image size must be less than 5MB");
+        setErrorMessage(t('products:messages.imageTooLarge'));
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -178,7 +187,7 @@ const CustomizePage: React.FC = () => {
 
       // Check file type
       if (!file.type.match('image.*')) {
-        setErrorMessage("Please upload an image file (JPEG, PNG, GIF)");
+        setErrorMessage(t('products:messages.invalidImageType'));
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -347,17 +356,17 @@ const CustomizePage: React.FC = () => {
   return (
     <Layout>
       <Helmet>
-        <title>Customize Your Shin Pads | Shin Shop</title>
+        <title>{t('pages:customize.title')}</title>
         <meta
           name="description"
-          content="Create your own custom shin pads with personalized images and text."
+          content={t('pages:customize.metaDescription')}
         />
       </Helmet>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Customize Your Shin Pads</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('pages:customize.pageTitle')}</h1>
         <p className="text-gray-600">
-          Make your shin pads uniquely yours by adding custom images and text.
+          {t('pages:customize.subtitle')}
         </p>
       </div>
 
@@ -626,5 +635,39 @@ const CustomizePage: React.FC = () => {
     </Layout>
   );
 };
+
+export const query = graphql`
+  query ($language: String!) {
+    locales: allLocale(filter: {language: {eq: $language}}) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
+    allMarkdownRemark(
+      filter: { frontmatter: { customizable: { eq: true } } }
+    ) {
+      edges {
+        node {
+          frontmatter {
+            id
+            title
+            slug
+            defaultPrice
+            sizes {
+              name
+              code
+              price
+            }
+            image
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default CustomizePage;

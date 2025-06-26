@@ -2,18 +2,30 @@
   "name": "gatsby-starter-minimal-ts",
   "version": "1.0.0",
   "private": true,
-  "description": "A Gatsby starter written in TypeScript with no plugins and a single welcome page.",
-  "author": "Jude Agboola",
+  "description": "Shin Shop - Premium customizable shin pads e-commerce website built with Gatsby, React, and i18n support.",
+  "author": "Shin Shop Team",
   "keywords": [
-    "gatsby"
+    "gatsby",
+    "ecommerce",
+    "shin-pads",
+    "customization",
+    "i18n",
+    "snipcart"
   ],
+  "engines": {
+    "node": ">=20.0.0 <21.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "develop": "gatsby develop",
     "start": "gatsby develop",
     "build": "gatsby build",
+    "build:prod": "npm ci && gatsby clean && gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit:security": "npm audit --audit-level=moderate",
+    "test:build": "npm run build && npm run serve"
   },
   "license": "0BSD",
   "dependencies": {
@@ -25,15 +37,18 @@
     "gatsby-plugin-image": "^3.14.0",
     "gatsby-plugin-postcss": "^6.14.0",
     "gatsby-plugin-react-helmet": "^6.14.0",
+    "gatsby-plugin-react-i18next": "^3.0.1",
     "gatsby-plugin-sharp": "^5.14.0",
     "gatsby-source-filesystem": "^5.14.0",
     "gatsby-transformer-remark": "^6.14.0",
     "gatsby-transformer-sharp": "^5.14.0",
+    "i18next": "^22.5.1",
     "konva": "^9.3.20",
     "postcss": "^8.4.32",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-helmet": "^6.1.0",
+    "react-i18next": "^12.3.1",
     "react-konva": "^18.2.10",
     "tailwindcss": "^3.4.1",
     "use-image": "^1.1.2"
@@ -43,6 +58,13 @@
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@types/react-helmet": "^6.1.11",
+    "gatsby-cli": "^5.14.0",
     "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "path-to-regexp": "^6.2.1",
+    "cookie": "^0.7.0"
   }
 }

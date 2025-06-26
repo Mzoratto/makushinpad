@@ -1,141 +1,178 @@
-# Shin Shop - Customizable Shin Pads E-commerce Website
+# Shin Shop - E-commerce Website
 
-A Gatsby-based e-commerce website for customizable shin pads, built with Tailwind CSS and Snipcart integration.
+A modern e-commerce website for customizable shin pads built with Gatsby.js, React, and Tailwind CSS with internationalization support for English and Czech.
 
-## Features
+## 🚀 Features
 
-- Browse a catalog of shin pad designs
-- View detailed product information
-- Customize shin pads with personal images and text
-- Shopping cart and checkout functionality via Snipcart
-- Responsive design for all device sizes
+- **Product Catalog**: Browse through various shin pad designs
+- **Customization Tool**: Interactive canvas for personalizing shin pads with images, text, and colors
+- **Shopping Cart**: Integrated with Snipcart for seamless checkout
+- **Payment Processing**: Secure payments through Stripe
+- **Internationalization**: Full i18n support for English (EN) and Czech (CZ)
+- **Language Switching**: Dynamic language toggle in header
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Performance Optimized**: Built with Gatsby for fast loading times
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- **Frontend Framework**: Gatsby.js with TypeScript
+- **Frontend**: Gatsby.js 5.14.x, React 18.2.0, TypeScript
 - **Styling**: Tailwind CSS
-- **E-commerce**: Snipcart (loaded via CDN)
-- **Payment Processing**: Stripe (via Snipcart)
-- **Image Handling**: Gatsby Image
-- **Content Management**: Markdown files
+- **E-commerce**: Snipcart
+- **Payments**: Stripe
+- **Customization**: React-Konva 18.2.10, Konva.js 9.3.x
+- **Internationalization**: react-i18next, gatsby-plugin-react-i18next
+- **Content**: Markdown files for products
 
-## Project Structure
+## 📋 Prerequisites
 
-```text
-shinshop/
-├── src/
-│   ├── components/       # Reusable UI components
-│   ├── pages/            # Route pages
-│   ├── templates/        # Page templates
-│   ├── styles/           # Global styles
-│   ├── images/           # Static images
-│   └── data/             # Product data
-├── static/               # Static assets
-├── content/              # Markdown content
-│   └── products/         # Product markdown files
-├── gatsby-config.js      # Gatsby configuration
-├── gatsby-node.js        # Gatsby node API
-└── netlify.toml          # Netlify configuration
+**IMPORTANT**: This project requires specific Node.js version for compatibility.
+
+- **Node.js**: v20.x LTS (20.18.0 recommended)
+- **npm**: v10.x or higher
+- **nvm**: Recommended for Node.js version management
+
+## 🚀 Getting Started
+
+### 1. Node.js Version Setup
+
+```bash
+# Install and use Node.js 20.18.0
+nvm install 20.18.0
+nvm use 20.18.0
+nvm alias default 20.18.0
+
+# Verify versions
+node --version  # Should show v20.18.0
+npm --version   # Should show v10.x.x
 ```
 
-## Getting Started
+### 2. Installation
 
-### Prerequisites
+```bash
+# Clone the repository
+git clone <repository-url>
+cd shinshop
 
-- Node.js (v16+)
-- npm or yarn
+# Install dependencies (use npm ci for production)
+npm install
 
-### Installation
+# Start the development server
+npm run develop
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/shinshop.git
-   cd shinshop
-   ```
+### 3. Access the Application
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+- **Main site**: http://localhost:8000/
+- **GraphiQL IDE**: http://localhost:8000/___graphql
 
-3. Start the development server:
-   ```bash
-   npm run develop
-   ```
+## 📜 Available Scripts
 
-4. Open your browser and navigate to `http://localhost:8000`
+- `npm run develop` - Start the development server
+- `npm run build` - Build the project for production
+- `npm run serve` - Serve the production build locally
+- `npm run clean` - Clean the Gatsby cache and public folder
+- `npm run typecheck` - Run TypeScript type checking
 
-## Customization
+## 🌐 Internationalization
 
-### Adding New Products
+The site supports English (default) and Czech languages:
 
-1. Create a new markdown file in `content/products/` with the following frontmatter:
-   ```markdown
-   ---
-   id: "unique-id"
-   title: "Product Title"
-   slug: "product-slug"
-   price: 29.99
-   image: "../../src/images/products/image.png"
-   customizable: true
-   customizationOptions:
-     - "image"
-     - "text"
-     - "color"
-   featured: true
-   ---
+- **English URLs**: `/` (default), `/products`, `/about`, etc.
+- **Czech URLs**: `/cz/`, `/cz/products`, `/cz/about`, etc.
+- **Language Switcher**: Available in the header navigation
 
-   Product description goes here...
-   ```
+### Translation Files
 
-2. Add the product image to `src/images/products/`
+```
+src/locales/
+├── en/
+│   ├── common.json     # Navigation, buttons, common UI
+│   ├── pages.json      # Page-specific content
+│   └── products.json   # Product-related translations
+└── cz/
+    ├── common.json     # Czech translations
+    ├── pages.json      # Czech page content
+    └── products.json   # Czech product translations
+```
 
-### Modifying Styles
+## 📁 Project Structure
 
-- Global styles are defined in `src/styles/global.css`
-- Tailwind configuration is in `tailwind.config.js`
+```
+src/
+├── components/          # Reusable React components
+│   ├── Layout.tsx      # Main layout with i18n header
+│   ├── LanguageSwitcher.tsx  # Language toggle component
+│   └── ...
+├── pages/              # Gatsby pages
+├── locales/            # i18n translation files
+├── styles/             # Global styles and Tailwind config
+├── images/             # Static images
+└── templates/          # Page templates
 
-## Deployment
+content/
+└── products/           # Product markdown files
+```
 
-### Netlify Deployment
+## ⚙️ Configuration
 
-1. Push your repository to GitHub
-2. Connect your repository to Netlify
-3. Configure build settings:
-   - Build command: `npm run build`
-   - Publish directory: `public/`
+### Snipcart Setup
 
-## Snipcart Configuration
+1. Sign up for a Snipcart account
+2. Add your public API key to the Snipcart script in `src/components/Layout.tsx`
+3. Configure multi-language support in Snipcart dashboard
 
-### Important Note on Snipcart Integration
+### Stripe Setup
 
-This project uses Snipcart loaded via CDN rather than as an npm package. The Snipcart scripts and styles are loaded in the `<head>` section of the website through the Helmet component in `src/pages/index.tsx`.
+1. Create a Stripe account
+2. Configure your Stripe keys in Snipcart dashboard
+3. Set up currency support for USD and CZK
 
-### Setting Up Snipcart
+## 🔧 Development Notes
 
-1. Sign up for a Snipcart account at [snipcart.com](https://snipcart.com)
-2. From your Snipcart dashboard, get your public API key
-3. The Snipcart API key has already been configured in `src/pages/index.tsx`:
+### Dependency Management
 
-   ```jsx
-   <div hidden id="snipcart" data-api-key="MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz"></div>
-   ```
+- React versions are pinned to 18.2.0 for stability
+- Security overrides are in place for vulnerable packages
+- Use `npm ci` for production deployments
 
-4. Configure your Snipcart dashboard with:
-   - Product settings
-   - Shipping options
-   - Payment gateways (Stripe is recommended)
-   - Notification emails
+### Known Issues & Solutions
 
-### Testing Snipcart Integration
+- **Node.js v22+**: Not compatible, use Node.js v20.x LTS
+- **React-Konva SSR**: Handled via gatsby-node.js webpack config
+- **i18n Routes**: Managed by gatsby-plugin-react-i18next
 
-Before deploying to production:
+## 🚀 Deployment
 
-1. Use Snipcart's test mode to verify the shopping cart functionality
-2. Test the complete checkout process
-3. Verify that product data is correctly passed to Snipcart
-4. Check that customization options are included in the cart metadata
+The site can be deployed to any static hosting service:
 
-### Detailed Snipcart Setup Guide
+- **Netlify**: Recommended for automatic deployments
+- **Vercel**: Good performance and easy setup
+- **GitHub Pages**: Free option for open source projects
 
-For a comprehensive guide on setting up and configuring Snipcart for this project, see the [Snipcart Setup Guide](docs/SNIPCART_SETUP.md).
+### Environment Variables
+
+```bash
+# Snipcart
+GATSBY_SNIPCART_API_KEY=your_snipcart_public_key
+
+# Site URL
+GATSBY_SITE_URL=https://your-domain.com
+```
+
+## 🔒 Security
+
+- Regular dependency audits with `npm audit`
+- Security overrides for vulnerable packages
+- Secure payment processing via Snipcart/Stripe
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
