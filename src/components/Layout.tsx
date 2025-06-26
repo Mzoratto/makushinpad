@@ -22,18 +22,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     if (typeof window !== 'undefined') {
       let snipcartDiv = document.getElementById('snipcart');
 
+      // Fallback API key for production
+      const apiKey = process.env.GATSBY_SNIPCART_API_KEY || 'MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz';
+
       if (!snipcartDiv) {
         snipcartDiv = document.createElement('div');
         snipcartDiv.id = 'snipcart';
         snipcartDiv.hidden = true;
-        snipcartDiv.setAttribute('data-api-key', process.env.GATSBY_SNIPCART_API_KEY || 'MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz');
+        snipcartDiv.setAttribute('data-api-key', apiKey);
         snipcartDiv.setAttribute('data-config-modal-style', 'side');
         snipcartDiv.setAttribute('data-config-add-product-behavior', 'none');
         snipcartDiv.setAttribute('data-currency', currency);
         snipcartDiv.setAttribute('data-locale', currentLanguage);
         document.body.appendChild(snipcartDiv);
+
+        // Debug log for production
+        console.log('Snipcart initialized with API key:', apiKey ? 'Set' : 'Not Set');
       } else {
-        // Update existing div with current language/currency
+        // Update existing div with current language/currency and ensure API key is set
+        snipcartDiv.setAttribute('data-api-key', apiKey);
         snipcartDiv.setAttribute('data-currency', currency);
         snipcartDiv.setAttribute('data-locale', currentLanguage);
       }
@@ -48,12 +55,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <script>
           {`
             window.SnipcartSettings = {
-              publicApiKey: "${process.env.GATSBY_SNIPCART_API_KEY || "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz"}",
+              publicApiKey: "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz",
               loadStrategy: "on-user-interaction",
               modalStyle: "side",
               currency: "${currency}",
               locale: "${currentLanguage}"
             };
+
+            // Ensure API key is available globally
+            window.SNIPCART_API_KEY = "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz";
           `}
         </script>
       </Helmet>
