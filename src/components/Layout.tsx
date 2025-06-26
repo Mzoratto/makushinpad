@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { Link } from "gatsby";
 import { Helmet } from "react-helmet";
 import { useI18next } from "gatsby-plugin-react-i18next";
@@ -16,11 +16,46 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const currentLanguage = i18n.language || 'en';
   const currency = currentLanguage === 'cz' ? 'CZK' : 'USD';
 
+  // Initialize Snipcart properly to prevent re-rendering issues
+  useEffect(() => {
+    // Ensure Snipcart div exists and is only created once
+    if (typeof window !== 'undefined') {
+      let snipcartDiv = document.getElementById('snipcart');
+
+      if (!snipcartDiv) {
+        snipcartDiv = document.createElement('div');
+        snipcartDiv.id = 'snipcart';
+        snipcartDiv.hidden = true;
+        snipcartDiv.setAttribute('data-api-key', process.env.GATSBY_SNIPCART_API_KEY || 'MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz');
+        snipcartDiv.setAttribute('data-config-modal-style', 'side');
+        snipcartDiv.setAttribute('data-config-add-product-behavior', 'none');
+        snipcartDiv.setAttribute('data-currency', currency);
+        snipcartDiv.setAttribute('data-locale', currentLanguage);
+        document.body.appendChild(snipcartDiv);
+      } else {
+        // Update existing div with current language/currency
+        snipcartDiv.setAttribute('data-currency', currency);
+        snipcartDiv.setAttribute('data-locale', currentLanguage);
+      }
+    }
+  }, [currency, currentLanguage]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Helmet>
         <script src="https://cdn.snipcart.com/themes/v3.3.1/default/snipcart.js"></script>
         <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.3.1/default/snipcart.css" />
+        <script>
+          {`
+            window.SnipcartSettings = {
+              publicApiKey: "${process.env.GATSBY_SNIPCART_API_KEY || "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz"}",
+              loadStrategy: "on-user-interaction",
+              modalStyle: "side",
+              currency: "${currency}",
+              locale: "${currentLanguage}"
+            };
+          `}
+        </script>
       </Helmet>
       <header className="bg-primary text-white">
         <div className="container-custom py-4">
@@ -179,16 +214,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </footer>
 
-      {/* Snipcart container */}
-      <div
-        hidden
-        id="snipcart"
-        data-api-key={process.env.GATSBY_SNIPCART_API_KEY || "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz"}
-        data-config-modal-style="side"
-        data-config-add-product-behavior="none"
-        data-currency={currency}
-        data-locale={currentLanguage}
-      ></div>
+      {/* Snipcart container is now created programmatically in useEffect */}
+
+
     </div>
   );
 };
