@@ -3,18 +3,21 @@ import { Link } from "gatsby";
 import { Helmet } from "react-helmet";
 import { useI18next } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
+import CurrencySwitcher from "./CurrencySwitcher";
+import { CurrencyProvider, useCurrency } from "../contexts/CurrencyContext";
 import "../styles/global.css";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+// Inner component that uses currency context
+const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
   const { t, i18n } = useI18next();
+  const { currency } = useCurrency();
 
-  // Get current language and currency
+  // Get current language
   const currentLanguage = i18n.language || 'en';
-  const currency = currentLanguage === 'cz' ? 'CZK' : 'USD';
 
   // Update Snipcart settings when language/currency changes
   useEffect(() => {
@@ -119,7 +122,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </li>
                 </ul>
               </nav>
-              <LanguageSwitcher />
+              <div className="flex items-center space-x-4">
+                <LanguageSwitcher />
+                <CurrencySwitcher />
+              </div>
             </div>
           </div>
         </div>
@@ -225,6 +231,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
 
     </div>
+  );
+};
+
+// Main Layout component that provides currency context
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  return (
+    <CurrencyProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </CurrencyProvider>
   );
 };
 

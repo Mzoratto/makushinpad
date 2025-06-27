@@ -5,11 +5,11 @@ slug: "classic-black"
 sizes:
   - name: "Malá"
     code: "S"
-    price: 749
+    price: 799
   - name: "Střední"
     code: "M"
-    price: 874
-defaultPrice: 749
+    price: 899
+defaultPrice: 799
 image: "../../../src/images/products/classic-black.png"
 customizable: true
 customizationOptions:

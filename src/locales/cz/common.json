@@ -50,7 +50,10 @@
   },
   "currency": {
     "symbol": "Kč",
-    "code": "CZK"
+    "code": "CZK",
+    "switch": "Změnit měnu",
+    "euro": "Euro",
+    "czech": "Česká koruna"
   },
   "sizes": {
     "small": "Malá",

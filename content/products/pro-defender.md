@@ -5,11 +5,11 @@ slug: "pro-defender"
 sizes:
   - name: "Small"
     code: "S"
-    price: 49.99
+    price: 32
   - name: "Medium"
     code: "M"
-    price: 54.99
-defaultPrice: 49.99
+    price: 36
+defaultPrice: 32
 image: "../../src/images/products/pro-defender.png"
 customizable: false
 featured: false

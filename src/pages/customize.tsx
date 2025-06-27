@@ -3,6 +3,8 @@ import { graphql, PageProps } from "gatsby";
 import { Helmet } from "react-helmet";
 import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
+import { useCurrency } from "../contexts/CurrencyContext";
+import { getProductPrice, formatPrice } from "../utils/priceUtils";
 
 interface Size {
   name: string;
@@ -53,6 +55,7 @@ interface CustomizePageProps extends PageProps {
 
 const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
   const { t } = useI18next();
+  const { currency } = useCurrency();
 
   // State for customization options - using first customizable product by default
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
@@ -150,14 +153,15 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
 
   // Calculate total price
   const calculatePrice = (): number => {
-    if (!selectedSize) return 0;
+    if (!selectedProduct || !selectedSize) return 0;
 
-    // Base price from selected size
-    let price = selectedSize.price;
+    // Base price from selected size using currency context
+    let price = getProductPrice(selectedProduct.id, selectedSize.code as 'S' | 'M', currency, 'customize');
 
     // Add customization fee if any customization is added
     if (uploadedImage || customText || leftShinText || rightShinText || playerNumber) {
-      price += 5.00; // $5 customization fee
+      const customizationFee = currency === 'CZK' ? 125 : 5; // 125 CZK or $5 customization fee
+      price += customizationFee;
     }
 
     return price;
@@ -246,10 +250,10 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
               {/* Price Display */}
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-2xl font-bold text-green-600">
-                  ${selectedSize ? selectedSize.price.toFixed(2) : selectedProduct.defaultPrice.toFixed(2)}
+                  {formatPrice(getProductPrice(selectedProduct.id, selectedSize?.code as 'S' | 'M' || 'S', currency, 'customize'), currency)}
                 </span>
                 <span className="text-lg text-gray-500 line-through">
-                  ${selectedSize ? (selectedSize.price * 1.4).toFixed(2) : (selectedProduct.defaultPrice * 1.4).toFixed(2)}
+                  {formatPrice(getProductPrice(selectedProduct.id, selectedSize?.code as 'S' | 'M' || 'S', currency, 'customize') * 1.4, currency)}
                 </span>
               </div>
 
@@ -266,10 +270,13 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
                 >
                   {selectedProduct.sizes.map((size) => (
                     <option key={size.code} value={size.code}>
-                      {size.name} - ${size.price.toFixed(2)}
+                      {size.name}
                     </option>
                   ))}
                 </select>
+                <p className="text-sm text-gray-500 mt-1">
+                  Size selection does not affect the price - all customized products are {formatPrice(getProductPrice(selectedProduct.id, 'S', currency, 'customize'), currency)}
+                </p>
               </div>
             </div>
           )}
@@ -464,7 +471,7 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
             <button
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors snipcart-add-item"
               disabled={!selectedProduct || !selectedSize}
-              data-item-id={selectedProduct && selectedSize ? `${selectedProduct.id}-${selectedSize.code}-custom` : ""}
+              data-item-id={selectedProduct && selectedSize ? `${selectedProduct.id}-${selectedSize.code}-custom-${currency}` : ""}
               data-item-price={calculatePrice()}
               data-item-url={`/customize`}
               data-item-description={selectedProduct ? `Customized ${selectedProduct.title}` : ""}
@@ -472,27 +479,29 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
               data-item-name={selectedProduct ? `Custom ${selectedProduct.title}` : ""}
               data-item-custom1-name="Size"
               data-item-custom1-value={selectedSize ? selectedSize.name : ""}
-              data-item-custom2-name="Player Number"
-              data-item-custom2-value={playerNumber}
-              data-item-custom3-name="Left Shin Text"
-              data-item-custom3-value={leftShinText}
-              data-item-custom4-name="Right Shin Text"
-              data-item-custom4-value={rightShinText}
-              data-item-custom5-name="Additional Text"
-              data-item-custom5-value={customText}
-              data-item-custom6-name="Text Color"
-              data-item-custom6-value={textColor}
-              data-item-custom7-name="Backdrop Color"
-              data-item-custom7-value={backdropColor}
-              data-item-custom8-name="Font"
-              data-item-custom8-value={textFont}
-              data-item-custom9-name="Additional Requirements"
-              data-item-custom9-value={additionalRequirements}
-              data-item-custom10-name="Uploaded Image"
-              data-item-custom10-value={uploadedFileName}
+              data-item-custom2-name="Currency"
+              data-item-custom2-value={currency}
+              data-item-custom3-name="Player Number"
+              data-item-custom3-value={playerNumber}
+              data-item-custom4-name="Left Shin Text"
+              data-item-custom4-value={leftShinText}
+              data-item-custom5-name="Right Shin Text"
+              data-item-custom5-value={rightShinText}
+              data-item-custom6-name="Additional Text"
+              data-item-custom6-value={customText}
+              data-item-custom7-name="Text Color"
+              data-item-custom7-value={textColor}
+              data-item-custom8-name="Backdrop Color"
+              data-item-custom8-value={backdropColor}
+              data-item-custom9-name="Font"
+              data-item-custom9-value={textFont}
+              data-item-custom10-name="Additional Requirements"
+              data-item-custom10-value={additionalRequirements}
+              data-item-custom11-name="Uploaded Image"
+              data-item-custom11-value={uploadedFileName}
             >
               {selectedProduct && selectedSize
-                ? `Add to Cart - $${calculatePrice().toFixed(2)}`
+                ? `Add to Cart - ${formatPrice(calculatePrice(), currency)}`
                 : "Please select size"}
             </button>
 

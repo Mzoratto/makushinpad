@@ -5,11 +5,11 @@ slug: "blue-wave"
 sizes:
   - name: "Malá"
     code: "S"
-    price: 874
+    price: 799
   - name: "Střední"
     code: "M"
-    price: 999
-defaultPrice: 874
+    price: 899
+defaultPrice: 799
 image: "../../../src/images/products/blue-wave.png"
 customizable: true
 customizationOptions:

@@ -5,11 +5,11 @@ slug: "pro-defender"
 sizes:
   - name: "Malá"
     code: "S"
-    price: 1249
+    price: 799
   - name: "Střední"
     code: "M"
-    price: 1374
-defaultPrice: 1249
+    price: 899
+defaultPrice: 799
 image: "../../../src/images/products/pro-defender.png"
 customizable: false
 featured: false

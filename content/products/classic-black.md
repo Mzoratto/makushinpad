@@ -5,11 +5,11 @@ slug: "classic-black"
 sizes:
   - name: "Small"
     code: "S"
-    price: 29.99
+    price: 32
   - name: "Medium"
     code: "M"
-    price: 34.99
-defaultPrice: 29.99
+    price: 36
+defaultPrice: 32
 image: "../../src/images/products/classic-black.png"
 customizable: true
 customizationOptions:

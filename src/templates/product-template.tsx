@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { graphql, Link } from "gatsby";
 import Layout from "../components/Layout";
+import { useCurrency } from "../contexts/CurrencyContext";
+import { getProductPrice, formatPrice } from "../utils/priceUtils";
 
 interface Size {
   name: string;
@@ -28,6 +30,7 @@ interface ProductTemplateProps {
 const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
   const { markdownRemark } = data;
   const { frontmatter, html } = markdownRemark;
+  const { currency } = useCurrency();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<Size | null>(
     frontmatter.sizes && frontmatter.sizes.length > 0 ? frontmatter.sizes[0] : null
@@ -44,6 +47,14 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
     const sizeCode = e.target.value;
     const size = frontmatter.sizes.find(s => s.code === sizeCode) || null;
     setSelectedSize(size);
+  };
+
+  // Get the current price based on selected size and currency
+  const getCurrentPrice = (): number => {
+    if (selectedSize) {
+      return getProductPrice(frontmatter.id, selectedSize.code as 'S' | 'M', currency, 'main');
+    }
+    return getProductPrice(frontmatter.id, 'S', currency, 'main');
   };
 
   return (
@@ -78,7 +89,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
         <div>
           <h1 className="text-3xl font-bold mb-2">{frontmatter.title}</h1>
           <p className="text-2xl text-primary font-bold mb-4">
-            ${selectedSize ? selectedSize.price.toFixed(2) : frontmatter.defaultPrice.toFixed(2)}
+            {formatPrice(getCurrentPrice(), currency)}
           </p>
 
           <div
@@ -124,8 +135,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
           <div className="flex space-x-4">
             <button
               className="btn btn-primary px-6 py-3 snipcart-add-item"
-              data-item-id={`${frontmatter.id}-${selectedSize?.code || "S"}`}
-              data-item-price={selectedSize ? selectedSize.price : frontmatter.defaultPrice}
+              data-item-id={`${frontmatter.id}-${selectedSize?.code || "S"}-${currency}`}
+              data-item-price={getCurrentPrice()}
               data-item-url={`/products/${frontmatter.id}`}
               data-item-description={frontmatter.title}
               data-item-image={frontmatter.image}
@@ -133,7 +144,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
               data-item-quantity={quantity}
               data-item-custom1-name="Size"
               data-item-custom1-value={selectedSize ? selectedSize.name : "Small"}
-              data-item-custom1-options={frontmatter.sizes.map(size => `${size.name}[+${(size.price - frontmatter.sizes[0].price).toFixed(2)}]`).join('|')}
+              data-item-custom2-name="Currency"
+              data-item-custom2-value={currency}
               disabled={!selectedSize}
             >
               {selectedSize ? "Add to Cart" : "Please select a size"}

@@ -5,11 +5,11 @@ slug: "fire-dragon"
 sizes:
   - name: "Malá"
     code: "S"
-    price: 999
+    price: 799
   - name: "Střední"
     code: "M"
-    price: 1124
-defaultPrice: 999
+    price: 899
+defaultPrice: 799
 image: "../../../src/images/products/fire-dragon.png"
 customizable: true
 customizationOptions:

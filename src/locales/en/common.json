@@ -49,8 +49,11 @@
     "czech": "Czech"
   },
   "currency": {
-    "symbol": "$",
-    "code": "USD"
+    "symbol": "€",
+    "code": "EUR",
+    "switch": "Switch Currency",
+    "euro": "Euro",
+    "czech": "Czech Koruna"
   },
   "sizes": {
     "small": "Small",

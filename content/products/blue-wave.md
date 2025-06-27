@@ -5,11 +5,11 @@ slug: "blue-wave"
 sizes:
   - name: "Small"
     code: "S"
-    price: 34.99
+    price: 32
   - name: "Medium"
     code: "M"
-    price: 39.99
-defaultPrice: 34.99
+    price: 36
+defaultPrice: 32
 image: "../../src/images/products/blue-wave.png"
 customizable: true
 customizationOptions:

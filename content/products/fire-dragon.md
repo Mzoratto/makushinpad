@@ -5,11 +5,11 @@ slug: "fire-dragon"
 sizes:
   - name: "Small"
     code: "S"
-    price: 39.99
+    price: 32
   - name: "Medium"
     code: "M"
-    price: 44.99
-defaultPrice: 39.99
+    price: 36
+defaultPrice: 32
 image: "../../src/images/products/fire-dragon.png"
 customizable: true
 customizationOptions:
