@@ -193,6 +193,8 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
         <span>Home</span> / <span>Customize</span> / <span className="text-gray-900">PRO Personalised Shin Pads</span>
       </div>
 
+      {/* Force cache refresh - new design */}
+
       {errorMessage && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
           {errorMessage}
