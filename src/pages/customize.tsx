@@ -59,8 +59,7 @@ interface CustomizePageProps extends PageProps {
 const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
   const { t } = useI18next();
 
-  // State for customization options
-  const [selectedProductId, setSelectedProductId] = useState<string>("");
+  // State for customization options - using first customizable product by default
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [customText, setCustomText] = useState<string>("");
   const [textColor, setTextColor] = useState<string>("#ffffff");
@@ -92,10 +91,10 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
     })
   );
 
-  // Get the currently selected product
-  const selectedProduct = products.find(p => p.id === selectedProductId);
+  // Use the first customizable product (since we only have one model for customization)
+  const selectedProduct = products.length > 0 ? products[0] : null;
 
-  // When product changes, reset the selected size to the first available size
+  // Initialize with the first product and size when component mounts
   useEffect(() => {
     if (selectedProduct && selectedProduct.sizes && selectedProduct.sizes.length > 0) {
       setSelectedSize(selectedProduct.sizes[0]);
@@ -103,17 +102,41 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
       setSelectedSize(null);
     }
 
-    // Reset canvas elements when product changes
-    setElements([]);
-    setSelectedId(null);
+    // Create a simple shin pad template as a data URL
+    const createShinPadTemplate = () => {
+      const svg = `
+        <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="shinPadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#f0f0f0;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#d0d0d0;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <!-- Shin pad outline -->
+          <path d="M120 50 Q200 30 280 50 L290 120 Q295 180 285 220 L275 250 Q200 270 125 250 L115 220 Q105 180 110 120 Z"
+                fill="url(#shinPadGradient)"
+                stroke="#999"
+                stroke-width="2"/>
+          <!-- Inner padding area -->
+          <path d="M140 70 Q200 55 260 70 L268 130 Q272 170 265 200 L258 225 Q200 240 142 225 L135 200 Q128 170 132 130 Z"
+                fill="#e8e8e8"
+                stroke="#bbb"
+                stroke-width="1"/>
+          <!-- Strap holes -->
+          <circle cx="130" cy="100" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
+          <circle cx="270" cy="100" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
+          <circle cx="130" cy="180" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
+          <circle cx="270" cy="180" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
+          <!-- Brand area -->
+          <rect x="170" y="140" width="60" height="20" fill="#f8f8f8" stroke="#ddd" stroke-width="1" rx="3"/>
+          <text x="200" y="153" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">CUSTOMIZE</text>
+        </svg>
+      `;
+      return `data:image/svg+xml;base64,${btoa(svg)}`;
+    };
 
-    // Set product image
-    if (selectedProduct) {
-      setProductImage(selectedProduct.image);
-    } else {
-      setProductImage(null);
-    }
-  }, [selectedProductId]);
+    setProductImage(createShinPadTemplate());
+  }, [selectedProduct]);
 
   // Update transformer when selected element changes
   useEffect(() => {
@@ -132,10 +155,7 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
     }
   }, [selectedId]);
 
-  // Handle product selection
-  const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedProductId(e.target.value);
-  };
+  // Remove product selection handler since we only have one model
 
   // Handle size selection
   const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -379,52 +399,32 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Customization Options */}
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Customization Options</h2>
-
-          <div className="mb-6">
-            <label
-              htmlFor="product"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Select Product <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="product"
-              value={selectedProductId}
-              onChange={handleProductChange}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              required
-            >
-              <option value="">Select a product</option>
-              {products.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.title} (From ${product.defaultPrice.toFixed(2)})
-                </option>
-              ))}
-            </select>
-          </div>
+          <h2 className="text-xl font-semibold mb-4">Customize Your Shin Pad</h2>
 
           {selectedProduct && (
-            <div className="mb-6">
-              <label
-                htmlFor="size"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Size <span className="text-red-500">*</span>
-              </label>
-              <select
-                id="size"
-                value={selectedSize?.code || ""}
-                onChange={handleSizeChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-                required
-              >
-                {selectedProduct.sizes.map((size) => (
-                  <option key={size.code} value={size.code}>
-                    {size.name} (${size.price.toFixed(2)})
-                  </option>
-                ))}
-              </select>
+            <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+              <h3 className="font-semibold text-blue-900 mb-2">{selectedProduct.title}</h3>
+              <div className="mb-4">
+                <label
+                  htmlFor="size"
+                  className="block text-gray-700 font-medium mb-2"
+                >
+                  Size <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="size"
+                  value={selectedSize?.code || ""}
+                  onChange={handleSizeChange}
+                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  required
+                >
+                  {selectedProduct.sizes.map((size) => (
+                    <option key={size.code} value={size.code}>
+                      {size.name} (${size.price.toFixed(2)})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           )}
 
@@ -625,6 +625,23 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
               </div>
             )}
           </div>
+
+          {/* Disclaimer */}
+          <div className="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-yellow-800">
+                  <strong>Important Disclaimer:</strong> This preview is just to give you an idea of the final design. The actual shin pad may differ from this preview.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-4 text-sm text-gray-600">
             <p>
               <strong>Instructions:</strong> Drag to move elements. Click on an element to select it, then use the handles to resize or rotate.
