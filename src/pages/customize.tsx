@@ -3,9 +3,6 @@ import { graphql, PageProps } from "gatsby";
 import { Helmet } from "react-helmet";
 import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
-import CustomizationPlaceholder from "../components/CustomizationPlaceholder";
-import type { CustomElement } from "../components/CustomizationCanvas";
-import loadable from "@loadable/component";
 
 interface Size {
   name: string;
@@ -21,8 +18,6 @@ interface Product {
   sizes: Size[];
   image: string;
 }
-
-// Using CustomElement type imported from CustomizationCanvas component
 
 interface CustomizePageProps extends PageProps {
   data: {
@@ -62,22 +57,19 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
   // State for customization options - using first customizable product by default
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
   const [customText, setCustomText] = useState<string>("");
-  const [textColor, setTextColor] = useState<string>("#ffffff");
+  const [textColor, setTextColor] = useState<string>("#000000");
   const [textFont, setTextFont] = useState<string>("Arial");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [textPosition, setTextPosition] = useState<string>("bottom");
+  const [uploadedFileName, setUploadedFileName] = useState<string>("");
+  const [playerNumber, setPlayerNumber] = useState<string>("");
+  const [leftShinText, setLeftShinText] = useState<string>("");
+  const [rightShinText, setRightShinText] = useState<string>("");
+  const [backdropColor, setBackdropColor] = useState<string>("#ffffff");
+  const [additionalRequirements, setAdditionalRequirements] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  // Canvas state
-  const [elements, setElements] = useState<CustomElement[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [stageSize, setStageSize] = useState({ width: 400, height: 300 });
-  const [productImage, setProductImage] = useState<string | null>(null);
 
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const transformerRef = useRef<any>(null);
-  const stageRef = useRef<any>(null);
 
   // Transform the data into a more usable format
   const products: Product[] = data.allMarkdownRemark.edges.map(
@@ -101,61 +93,9 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
     } else {
       setSelectedSize(null);
     }
-
-    // Create a simple shin pad template as a data URL
-    const createShinPadTemplate = () => {
-      const svg = `
-        <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="shinPadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#f0f0f0;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#d0d0d0;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <!-- Shin pad outline -->
-          <path d="M120 50 Q200 30 280 50 L290 120 Q295 180 285 220 L275 250 Q200 270 125 250 L115 220 Q105 180 110 120 Z"
-                fill="url(#shinPadGradient)"
-                stroke="#999"
-                stroke-width="2"/>
-          <!-- Inner padding area -->
-          <path d="M140 70 Q200 55 260 70 L268 130 Q272 170 265 200 L258 225 Q200 240 142 225 L135 200 Q128 170 132 130 Z"
-                fill="#e8e8e8"
-                stroke="#bbb"
-                stroke-width="1"/>
-          <!-- Strap holes -->
-          <circle cx="130" cy="100" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
-          <circle cx="270" cy="100" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
-          <circle cx="130" cy="180" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
-          <circle cx="270" cy="180" r="8" fill="#ccc" stroke="#999" stroke-width="1"/>
-          <!-- Brand area -->
-          <rect x="170" y="140" width="60" height="20" fill="#f8f8f8" stroke="#ddd" stroke-width="1" rx="3"/>
-          <text x="200" y="153" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">CUSTOMIZE</text>
-        </svg>
-      `;
-      return `data:image/svg+xml;base64,${btoa(svg)}`;
-    };
-
-    setProductImage(createShinPadTemplate());
   }, [selectedProduct]);
 
-  // Update transformer when selected element changes
-  useEffect(() => {
-    if (selectedId && transformerRef.current) {
-      // Find the selected node
-      const selectedNode = stageRef.current?.findOne(`#${selectedId}`);
-      if (selectedNode) {
-        // Attach transformer to the selected node
-        transformerRef.current.nodes([selectedNode]);
-        transformerRef.current.getLayer().batchDraw();
-      }
-    } else if (transformerRef.current) {
-      // Clear transformer selection
-      transformerRef.current.nodes([]);
-      transformerRef.current.getLayer().batchDraw();
-    }
-  }, [selectedId]);
-
-  // Remove product selection handler since we only have one model
+  // Remove old canvas-related code since we're using simple upload approach
 
   // Handle size selection
   const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -166,39 +106,13 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
     }
   };
 
-  // Handle text input
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const text = e.target.value;
-    if (text.length <= 20) {
-      setCustomText(text);
-      setErrorMessage("");
-    } else {
-      setErrorMessage(t('products:messages.textTooLong'));
-    }
-  };
-
-  // Handle text color selection
-  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTextColor(e.target.value);
-  };
-
-  // Handle font selection
-  const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTextFont(e.target.value);
-  };
-
-  // Handle text position selection
-  const handleTextPositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTextPosition(e.target.value);
-  };
-
-  // Handle image upload
+  // Handle image upload - increased to 50MB limit
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setErrorMessage(t('products:messages.imageTooLarge'));
+      // Check file size (max 50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        setErrorMessage("Image file size must be less than 50MB");
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -207,7 +121,7 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
 
       // Check file type
       if (!file.type.match('image.*')) {
-        setErrorMessage(t('products:messages.invalidImageType'));
+        setErrorMessage("Please upload a valid image file (JPEG, PNG, GIF, etc.)");
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -218,47 +132,7 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
       reader.onload = () => {
         const imageUrl = reader.result as string;
         setUploadedImage(imageUrl);
-
-        // Create a new image element for the canvas
-        const img = new window.Image();
-        img.src = imageUrl;
-        img.onload = () => {
-          // Calculate scaled dimensions while maintaining aspect ratio
-          const maxWidth = stageSize.width * 0.6;
-          const maxHeight = stageSize.height * 0.6;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > maxWidth) {
-            const ratio = maxWidth / width;
-            width = maxWidth;
-            height = height * ratio;
-          }
-
-          if (height > maxHeight) {
-            const ratio = maxHeight / height;
-            height = maxHeight;
-            width = width * ratio;
-          }
-
-          // Add image to canvas elements
-          const newElement: CustomElement = {
-            id: `image-${Date.now()}`,
-            type: 'image',
-            x: stageSize.width / 2 - width / 2,
-            y: stageSize.height / 2 - height / 2,
-            width,
-            height,
-            rotation: 0,
-            scaleX: 1,
-            scaleY: 1,
-            content: imageUrl
-          };
-
-          setElements(prev => [...prev, newElement]);
-          setSelectedId(newElement.id);
-        };
-
+        setUploadedFileName(file.name);
         setErrorMessage("");
       };
       reader.readAsDataURL(file);
@@ -268,67 +142,10 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
   // Handle image removal
   const handleRemoveImage = () => {
     setUploadedImage(null);
+    setUploadedFileName("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-
-    // Remove all image elements from canvas
-    setElements(prev => prev.filter(el => el.type !== 'image'));
-  };
-
-  // Handle adding text to canvas
-  const handleAddText = () => {
-    if (!customText) return;
-
-    const fontSize = 20;
-    const newElement: CustomElement = {
-      id: `text-${Date.now()}`,
-      type: 'text',
-      x: stageSize.width / 2 - (customText.length * fontSize) / 4,
-      y: textPosition === "top" ? 20 :
-         textPosition === "middle" ? stageSize.height / 2 :
-         stageSize.height - 40,
-      width: customText.length * fontSize,
-      height: fontSize * 1.5,
-      rotation: 0,
-      scaleX: 1,
-      scaleY: 1,
-      content: customText,
-      fontFamily: textFont,
-      fontSize: fontSize,
-      fill: textColor
-    };
-
-    setElements(prev => [...prev, newElement]);
-    setSelectedId(newElement.id);
-  };
-
-  // Handle element selection
-  const handleElementSelect = (id: string) => {
-    setSelectedId(id);
-  };
-
-  // Handle element deselection
-  const handleStageClick = (e: any) => {
-    // Clicked on stage but not on any element
-    if (e.target === e.currentTarget) {
-      setSelectedId(null);
-    }
-  };
-
-  // Handle element transformation
-  const handleElementTransform = (id: string, newProps: any) => {
-    setElements(prev =>
-      prev.map(el =>
-        el.id === id ? { ...el, ...newProps } : el
-      )
-    );
-  };
-
-  // Handle element removal
-  const handleElementRemove = (id: string) => {
-    setElements(prev => prev.filter(el => el.id !== id));
-    setSelectedId(null);
   };
 
   // Calculate total price
@@ -338,8 +155,8 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
     // Base price from selected size
     let price = selectedSize.price;
 
-    // Add customization fee
-    if (elements.length > 0) {
+    // Add customization fee if any customization is added
+    if (uploadedImage || customText || leftShinText || rightShinText || playerNumber) {
       price += 5.00; // $5 customization fee
     }
 
@@ -348,29 +165,17 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
 
   // Serialize customization data for Snipcart
   const getCustomizationData = (): string => {
-    if (elements.length === 0) return "None";
+    const customizations = [];
 
-    return JSON.stringify(
-      elements.map(el => ({
-        id: el.id,
-        type: el.type,
-        content: el.type === 'text' ? el.content : 'Custom Image',
-        position: {
-          x: Math.round(el.x),
-          y: Math.round(el.y),
-          rotation: Math.round(el.rotation),
-          scale: {
-            x: parseFloat(el.scaleX.toFixed(2)),
-            y: parseFloat(el.scaleY.toFixed(2))
-          }
-        },
-        style: el.type === 'text' ? {
-          fontFamily: el.fontFamily,
-          fontSize: el.fontSize,
-          fill: el.fill
-        } : undefined
-      }))
-    );
+    if (uploadedImage) customizations.push(`Image: ${uploadedFileName}`);
+    if (customText) customizations.push(`Text: ${customText}`);
+    if (leftShinText) customizations.push(`Left Shin: ${leftShinText}`);
+    if (rightShinText) customizations.push(`Right Shin: ${rightShinText}`);
+    if (playerNumber) customizations.push(`Number: ${playerNumber}`);
+    if (backdropColor !== "#ffffff") customizations.push(`Backdrop: ${backdropColor}`);
+    if (additionalRequirements) customizations.push(`Additional: ${additionalRequirements}`);
+
+    return customizations.length > 0 ? customizations.join('; ') : "None";
   };
 
   return (
@@ -383,44 +188,83 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
         />
       </Helmet>
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{t('pages:customize.pageTitle')}</h1>
-        <p className="text-gray-600">
-          {t('pages:customize.subtitle')}
-        </p>
+      {/* Breadcrumb */}
+      <div className="mb-6 text-sm text-gray-600">
+        <span>Home</span> / <span>Customize</span> / <span className="text-gray-900">PRO Personalised Shin Pads</span>
       </div>
 
       {errorMessage && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
           {errorMessage}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Customization Options */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Customize Your Shin Pad</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Product Images */}
+        <div className="space-y-4">
+          {/* Main Product Image */}
+          <div className="bg-gray-100 rounded-lg p-8 flex items-center justify-center h-96">
+            <div className="text-center">
+              <div className="w-64 h-80 bg-white rounded-lg shadow-md flex items-center justify-center mb-4">
+                <div className="text-gray-400">
+                  <svg className="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-sm">Shin Pad Preview</p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600">Your customized design will be professionally printed</p>
+            </div>
+          </div>
 
+          {/* Thumbnail Images */}
+          <div className="grid grid-cols-4 gap-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-gray-100 rounded border-2 border-transparent hover:border-blue-500 cursor-pointer">
+                <div className="aspect-square bg-white rounded flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Product Details & Customization Form */}
+        <div className="space-y-6">
+          {/* Product Title & Price */}
           {selectedProduct && (
-            <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-semibold text-blue-900 mb-2">{selectedProduct.title}</h3>
-              <div className="mb-4">
-                <label
-                  htmlFor="size"
-                  className="block text-gray-700 font-medium mb-2"
-                >
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Sale!</span>
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">{selectedProduct.title}</h1>
+
+              {/* Price Display */}
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-2xl font-bold text-green-600">
+                  ${selectedSize ? selectedSize.price.toFixed(2) : selectedProduct.defaultPrice.toFixed(2)}
+                </span>
+                <span className="text-lg text-gray-500 line-through">
+                  ${selectedSize ? (selectedSize.price * 1.4).toFixed(2) : (selectedProduct.defaultPrice * 1.4).toFixed(2)}
+                </span>
+              </div>
+
+              {/* Size Selection */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Size <span className="text-red-500">*</span>
                 </label>
                 <select
-                  id="size"
                   value={selectedSize?.code || ""}
                   onChange={handleSizeChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
                   {selectedProduct.sizes.map((size) => (
                     <option key={size.code} value={size.code}>
-                      {size.name} (${size.price.toFixed(2)})
+                      {size.name} - ${size.price.toFixed(2)}
                     </option>
                   ))}
                 </select>
@@ -428,225 +272,276 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
             </div>
           )}
 
-          <div className="mb-6">
-            <label
-              htmlFor="image"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Upload Image
-            </label>
-            <p className="text-sm text-gray-500 mb-2">
-              Accepted formats: JPEG, PNG, GIF. Max size: 5MB.
-            </p>
-            <input
-              type="file"
-              id="image"
-              ref={fileInputRef}
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-            />
-            {uploadedImage && (
-              <div className="mt-2">
-                <button
-                  onClick={handleRemoveImage}
-                  className="text-red-600 text-sm hover:underline"
-                >
-                  Remove Image
-                </button>
-              </div>
-            )}
+          {/* Image Upload Section */}
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+            <div className="text-center">
+              <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Upload an image</h3>
+              <p className="text-sm text-gray-500 mb-4">
+                Accepted formats: JPEG, PNG, GIF. Max size: 50MB.
+              </p>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="image-upload"
+              />
+              <label
+                htmlFor="image-upload"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
+              >
+                Choose File
+              </label>
+              {uploadedFileName && (
+                <div className="mt-3 flex items-center justify-center gap-2">
+                  <span className="text-sm text-green-600">✓ {uploadedFileName}</span>
+                  <button
+                    onClick={handleRemoveImage}
+                    className="text-red-600 text-sm hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="mb-6">
-            <label
-              htmlFor="text"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Custom Text (Max 20 characters)
-            </label>
-            <div className="flex space-x-2">
+          {/* Text Customization Options */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900">Text Customization</h3>
+
+            {/* Player Number */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Player Number
+              </label>
               <input
                 type="text"
-                id="text"
-                value={customText}
-                onChange={handleTextChange}
-                placeholder="Enter your text"
-                className="flex-1 border border-gray-300 rounded px-3 py-2"
+                value={playerNumber}
+                onChange={(e) => setPlayerNumber(e.target.value)}
+                placeholder="e.g., 10"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                maxLength={3}
+              />
+            </div>
+
+            {/* Left Shin Text */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Left Shin Pad Text
+              </label>
+              <input
+                type="text"
+                value={leftShinText}
+                onChange={(e) => setLeftShinText(e.target.value)}
+                placeholder="Text for left shin pad"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 maxLength={20}
               />
-              <button
-                type="button"
-                onClick={handleAddText}
-                className="bg-secondary text-white px-4 py-2 rounded hover:bg-opacity-90"
-                disabled={!customText}
-              >
-                Add Text
-              </button>
             </div>
-            <p className="text-sm text-gray-500 mt-1">
-              {customText.length}/20 characters
-            </p>
+
+            {/* Right Shin Text */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Right Shin Pad Text
+              </label>
+              <input
+                type="text"
+                value={rightShinText}
+                onChange={(e) => setRightShinText(e.target.value)}
+                placeholder="Text for right shin pad"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                maxLength={20}
+              />
+            </div>
+
+            {/* General Custom Text */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Additional Text
+              </label>
+              <input
+                type="text"
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                placeholder="Any additional text"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                maxLength={30}
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Style Options */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900">Style Options</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Text Color */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Text Color
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={textColor}
+                    onChange={(e) => setTextColor(e.target.value)}
+                    className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-600">{textColor}</span>
+                </div>
+              </div>
+
+              {/* Backdrop Color */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Backdrop Color
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={backdropColor}
+                    onChange={(e) => setBackdropColor(e.target.value)}
+                    className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-600">{backdropColor}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Font Selection */}
             <div>
-              <label
-                htmlFor="font"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Font
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Font Style
               </label>
               <select
-                id="font"
                 value={textFont}
-                onChange={handleFontChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
+                onChange={(e) => setTextFont(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="Arial">Arial</option>
                 <option value="Helvetica">Helvetica</option>
                 <option value="Times New Roman">Times New Roman</option>
                 <option value="Courier New">Courier New</option>
                 <option value="Verdana">Verdana</option>
-              </select>
-            </div>
-            <div>
-              <label
-                htmlFor="color"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Text Color
-              </label>
-              <input
-                type="color"
-                id="color"
-                value={textColor}
-                onChange={handleTextColorChange}
-                className="w-full h-10 border border-gray-300 rounded px-1"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="position"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Text Position
-              </label>
-              <select
-                id="position"
-                value={textPosition}
-                onChange={handleTextPositionChange}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              >
-                <option value="top">Top</option>
-                <option value="middle">Middle</option>
-                <option value="bottom">Bottom</option>
+                <option value="Impact">Impact</option>
+                <option value="Georgia">Georgia</option>
               </select>
             </div>
           </div>
 
-          <button
-            className="btn btn-primary w-full snipcart-add-item"
-            disabled={!selectedProduct || !selectedSize}
-            data-item-id={selectedProduct && selectedSize ? `${selectedProduct.id}-${selectedSize.code}-custom` : ""}
-            data-item-price={calculatePrice()}
-            data-item-url={`/customize`}
-            data-item-description={selectedProduct ? `Customized ${selectedProduct.title}` : ""}
-            data-item-image={uploadedImage || ""}
-            data-item-name={selectedProduct ? `Custom ${selectedProduct.title}` : ""}
-            data-item-custom1-name="Size"
-            data-item-custom1-value={selectedSize ? selectedSize.name : ""}
-            data-item-custom2-name="Customization Data"
-            data-item-custom2-value={getCustomizationData()}
-          >
-            {selectedProduct && selectedSize
-              ? `Add to Cart - $${calculatePrice().toFixed(2)}`
-              : "Please select product and size"}
-          </button>
+          {/* Additional Requirements */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Additional Requirements
+            </label>
+            <textarea
+              value={additionalRequirements}
+              onChange={(e) => setAdditionalRequirements(e.target.value)}
+              placeholder="Any special requests or instructions..."
+              rows={4}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Quantity and Add to Cart */}
+          <div className="border-t pt-6">
+            <div className="flex items-center gap-4 mb-6">
+              <label className="text-sm font-medium text-gray-700">Quantity:</label>
+              <div className="flex items-center border border-gray-300 rounded-md">
+                <button className="px-3 py-2 text-gray-600 hover:text-gray-800">−</button>
+                <span className="px-4 py-2 border-x border-gray-300">1</span>
+                <button className="px-3 py-2 text-gray-600 hover:text-gray-800">+</button>
+              </div>
+            </div>
+
+            <button
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors snipcart-add-item"
+              disabled={!selectedProduct || !selectedSize}
+              data-item-id={selectedProduct && selectedSize ? `${selectedProduct.id}-${selectedSize.code}-custom` : ""}
+              data-item-price={calculatePrice()}
+              data-item-url={`/customize`}
+              data-item-description={selectedProduct ? `Customized ${selectedProduct.title}` : ""}
+              data-item-image={uploadedImage || ""}
+              data-item-name={selectedProduct ? `Custom ${selectedProduct.title}` : ""}
+              data-item-custom1-name="Size"
+              data-item-custom1-value={selectedSize ? selectedSize.name : ""}
+              data-item-custom2-name="Player Number"
+              data-item-custom2-value={playerNumber}
+              data-item-custom3-name="Left Shin Text"
+              data-item-custom3-value={leftShinText}
+              data-item-custom4-name="Right Shin Text"
+              data-item-custom4-value={rightShinText}
+              data-item-custom5-name="Additional Text"
+              data-item-custom5-value={customText}
+              data-item-custom6-name="Text Color"
+              data-item-custom6-value={textColor}
+              data-item-custom7-name="Backdrop Color"
+              data-item-custom7-value={backdropColor}
+              data-item-custom8-name="Font"
+              data-item-custom8-value={textFont}
+              data-item-custom9-name="Additional Requirements"
+              data-item-custom9-value={additionalRequirements}
+              data-item-custom10-name="Uploaded Image"
+              data-item-custom10-value={uploadedFileName}
+            >
+              {selectedProduct && selectedSize
+                ? `Add to Cart - $${calculatePrice().toFixed(2)}`
+                : "Please select size"}
+            </button>
+
+            {/* Product Info */}
+            <div className="mt-6 text-sm text-gray-600 space-y-2">
+              <p><strong>SKU:</strong> {selectedProduct?.id || 'N/A'}</p>
+              <p><strong>Category:</strong> Personalised Shin Pads</p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">custom shin pads</span>
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">personalised shin pads</span>
+                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">shin pads</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Preview */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Interactive Preview</h2>
-          <div className="bg-gray-100 rounded-lg p-4 h-96 flex items-center justify-center">
-            {selectedProduct ? (
-              <div className="w-full h-full">
-                {typeof window !== 'undefined' ? (
-                  (() => {
-                    // Define the loadable component inside the render function
-                    // to ensure it's only created in the browser
-                    const KonvaCanvas = loadable(() => import('../components/CustomizationCanvas'), {
-                      fallback: (
-                        <CustomizationPlaceholder
-                          width={stageSize.width}
-                          height={stageSize.height}
-                          productName={selectedProduct.title}
-                          productSize={selectedSize?.name}
-                        />
-                      )
-                    });
+      </div>
 
-                    return (
-                      <KonvaCanvas
-                        productImage={productImage}
-                        canvasWidth={stageSize.width}
-                        canvasHeight={stageSize.height}
-                        elements={elements}
-                        onElementsChange={setElements}
-                        selectedId={selectedId}
-                        onElementSelect={setSelectedId}
-                      />
-                    );
-                  })()
-                ) : (
-                  <CustomizationPlaceholder
-                    width={stageSize.width}
-                    height={stageSize.height}
-                    productName={selectedProduct.title}
-                    productSize={selectedSize?.name}
-                  />
-                )}
-
-                {/* Controls for selected element */}
-                {selectedId && (
-                  <div className="mt-2 flex justify-center">
-                    <button
-                      onClick={() => handleElementRemove(selectedId)}
-                      className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-                    >
-                      Remove Selected Element
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-gray-500 text-center">
-                Select a product to see the interactive preview
-              </div>
-            )}
-          </div>
-
-          {/* Disclaimer */}
-          <div className="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-yellow-800">
-                  <strong>Important Disclaimer:</strong> This preview is just to give you an idea of the final design. The actual shin pad may differ from this preview.
-                </p>
-              </div>
+      {/* Product Description & Disclaimer */}
+      <div className="mt-12 space-y-8">
+        {/* Disclaimer */}
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-lg">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-lg font-medium text-yellow-800 mb-2">Important Notice</h3>
+              <p className="text-yellow-700">
+                This preview is just to give you an idea of the final design. The actual shin pad may differ from this preview.
+                We will send you a design proof for approval before production begins.
+              </p>
             </div>
           </div>
+        </div>
 
-          <div className="mt-4 text-sm text-gray-600">
-            <p>
-              <strong>Instructions:</strong> Drag to move elements. Click on an element to select it, then use the handles to resize or rotate.
-            </p>
-          </div>
+        {/* Product Description */}
+        <div className="prose max-w-none">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Description</h2>
+          <p className="text-gray-700 mb-4">
+            With the PRO personalised shin pads package, you have the ability to add multiple uploads to your personalised shin pad design.
+            We will send you further instructions after you place your order so we can provide you with the best shin pad design possible.
+            There is no limit to how many images you would like to upload with the PRO personalised shin pad package.
+          </p>
+          <p className="text-gray-700">
+            Please ensure you review your PRO personalised shin pads customisation options. With the PRO personalised shin pad package
+            you can choose to upload multiple images, add a backdrop colour, add text to both the left and right shin pad alongside your number.
+            We also have an additional requirements box where we invite you to make any additional request.
+          </p>
         </div>
       </div>
     </Layout>
