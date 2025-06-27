@@ -46,7 +46,9 @@ interface CustomizePageProps extends PageProps {
               price: number;
             }>;
             image: string;
+            language?: string;
           };
+          fileAbsolutePath: string;
         };
       }>;
     };
@@ -54,8 +56,9 @@ interface CustomizePageProps extends PageProps {
 }
 
 const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
-  const { t } = useI18next();
+  const { t, i18n } = useI18next();
   const { currency } = useCurrency();
+  const currentLanguage = i18n.language || 'en';
 
   // State for customization options - using first customizable product by default
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
@@ -74,17 +77,26 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Transform the data into a more usable format
-  const products: Product[] = data.allMarkdownRemark.edges.map(
-    ({ node }: any) => ({
+  // Filter and transform the data into a more usable format
+  const products: Product[] = data.allMarkdownRemark.edges
+    .filter(({ node }) => {
+      if (currentLanguage === 'en') {
+        // For English, show products that don't have language field or have language !== 'cz'
+        // Also filter by file path to exclude files in /cz/ directory
+        return !node.frontmatter.language && !node.fileAbsolutePath.includes('/cz/');
+      } else {
+        // For Czech, show products that have language: 'cz' or are in /cz/ directory
+        return node.frontmatter.language === 'cz' || node.fileAbsolutePath.includes('/cz/');
+      }
+    })
+    .map(({ node }: any) => ({
       id: node.frontmatter.id,
       title: node.frontmatter.title,
       slug: node.frontmatter.slug,
       defaultPrice: node.frontmatter.defaultPrice,
       sizes: node.frontmatter.sizes || [],
       image: node.frontmatter.image,
-    })
-  );
+    }));
 
   // Use the first customizable product (since we only have one model for customization)
   const selectedProduct = products.length > 0 ? products[0] : null;
@@ -591,7 +603,9 @@ export const query = graphql`
               price
             }
             image
+            language
           }
+          fileAbsolutePath
         }
       }
     }

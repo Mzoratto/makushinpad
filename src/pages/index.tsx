@@ -15,11 +15,13 @@ interface IndexPageProps extends PageProps {
             id: string;
             title: string;
             slug: string;
-            price: number;
+            defaultPrice: number;
             image: any;
             featured: boolean;
+            language?: string;
           };
           excerpt: string;
+          fileAbsolutePath: string;
         };
       }>;
     };
@@ -27,8 +29,20 @@ interface IndexPageProps extends PageProps {
 }
 
 const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
-  const featuredProducts = data.featured.edges;
-  const { t } = useI18next();
+  const { t, i18n } = useI18next();
+  const currentLanguage = i18n.language || 'en';
+
+  // Filter featured products based on current language
+  const featuredProducts = data.featured.edges.filter(({ node }) => {
+    if (currentLanguage === 'en') {
+      // For English, show products that don't have language field or have language !== 'cz'
+      // Also filter by file path to exclude files in /cz/ directory
+      return !node.frontmatter.language && !node.fileAbsolutePath.includes('/cz/');
+    } else {
+      // For Czech, show products that have language: 'cz' or are in /cz/ directory
+      return node.frontmatter.language === 'cz' || node.fileAbsolutePath.includes('/cz/');
+    }
+  }).slice(0, 3); // Limit to 3 products for featured section
 
   return (
     <Layout>
@@ -148,7 +162,7 @@ export const query = graphql`
     }
     featured: allMarkdownRemark(
       filter: { frontmatter: { featured: { eq: true } } }
-      limit: 3
+      limit: 6
     ) {
       edges {
         node {
@@ -161,7 +175,9 @@ export const query = graphql`
             defaultPrice
             featured
             image
+            language
           }
+          fileAbsolutePath
         }
       }
     }

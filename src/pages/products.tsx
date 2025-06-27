@@ -18,8 +18,10 @@ interface ProductsPageProps extends PageProps {
             defaultPrice: number;
             image: any;
             customizable: boolean;
+            language?: string;
           };
           excerpt: string;
+          fileAbsolutePath: string;
         };
       }>;
     };
@@ -27,8 +29,20 @@ interface ProductsPageProps extends PageProps {
 }
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ data }) => {
-  const products = data.allMarkdownRemark.edges;
-  const { t } = useI18next();
+  const { t, i18n } = useI18next();
+  const currentLanguage = i18n.language || 'en';
+
+  // Filter products based on current language
+  const products = data.allMarkdownRemark.edges.filter(({ node }) => {
+    if (currentLanguage === 'en') {
+      // For English, show products that don't have language field or have language !== 'cz'
+      // Also filter by file path to exclude files in /cz/ directory
+      return !node.frontmatter.language && !node.fileAbsolutePath.includes('/cz/');
+    } else {
+      // For Czech, show products that have language: 'cz' or are in /cz/ directory
+      return node.frontmatter.language === 'cz' || node.fileAbsolutePath.includes('/cz/');
+    }
+  });
 
   return (
     <Layout>
@@ -84,7 +98,9 @@ export const query = graphql`
             defaultPrice
             customizable
             image
+            language
           }
+          fileAbsolutePath
         }
       }
     }

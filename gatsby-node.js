@@ -36,7 +36,9 @@ exports.createPages = async ({ graphql, actions }) => {
             id
             frontmatter {
               slug
+              language
             }
+            fileAbsolutePath
           }
         }
       }
@@ -48,8 +50,14 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 
   // Create product pages - these will be processed by gatsby-plugin-react-i18next
+  // Only create pages for English products (avoid duplicates)
   const products = result.data.allMarkdownRemark.edges;
-  products.forEach(({ node }) => {
+  const englishProducts = products.filter(({ node }) => {
+    // Only create pages for English products (no language field and not in /cz/ directory)
+    return !node.frontmatter.language && !node.fileAbsolutePath.includes('/cz/');
+  });
+
+  englishProducts.forEach(({ node }) => {
     createPage({
       path: `/products/${node.frontmatter.slug}`,
       component: productTemplate,
