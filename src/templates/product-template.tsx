@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { graphql, Link } from "gatsby";
+import { useI18next } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import { useCurrency } from "../contexts/CurrencyContext";
 import { getProductPrice, formatPrice } from "../utils/priceUtils";
@@ -31,6 +32,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
   const { markdownRemark } = data;
   const { frontmatter, html } = markdownRemark;
   const { currency } = useCurrency();
+  const { t } = useI18next();
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<Size | null>(
     frontmatter.sizes && frontmatter.sizes.length > 0 ? frontmatter.sizes[0] : null
@@ -75,7 +77,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Back to Products
+          {t('common:navigation.backToProducts')}
         </Link>
       </div>
 
@@ -100,7 +102,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
           {frontmatter.sizes && frontmatter.sizes.length > 0 && (
             <div className="mb-6">
               <label htmlFor="size" className="block text-gray-700 font-medium mb-2">
-                Size <span className="text-red-500">*</span>
+                {t('common:product.size')} <span className="text-red-500">*</span>
               </label>
               <select
                 id="size"
@@ -111,7 +113,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
               >
                 {frontmatter.sizes.map((size) => (
                   <option key={size.code} value={size.code}>
-                    {size.name} (${size.price.toFixed(2)})
+                    {size.name} ({formatPrice(getProductPrice(frontmatter.id, size.code as 'S' | 'M', currency, 'main'), currency)})
                   </option>
                 ))}
               </select>
@@ -120,7 +122,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
 
           <div className="mb-6">
             <label htmlFor="quantity" className="block text-gray-700 mb-2">
-              Quantity
+              {t('common:product.quantity')}
             </label>
             <input
               type="number"
@@ -148,7 +150,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
               data-item-custom2-value={currency}
               disabled={!selectedSize}
             >
-              {selectedSize ? "Add to Cart" : "Please select a size"}
+              {selectedSize ? t('common:buttons.addToCart') : t('common:buttons.selectSize')}
             </button>
           </div>
         </div>

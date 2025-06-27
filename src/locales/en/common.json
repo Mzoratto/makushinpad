@@ -9,7 +9,8 @@
     "customize": "Customize",
     "about": "About",
     "contact": "Contact",
-    "cart": "Cart"
+    "cart": "Cart",
+    "backToProducts": "Back to Products"
   },
   "buttons": {
     "shopCollection": "Shop Collection",
@@ -26,7 +27,8 @@
     "cancel": "Cancel",
     "back": "Back",
     "next": "Next",
-    "finish": "Finish"
+    "finish": "Finish",
+    "selectSize": "Please select a size"
   },
   "footer": {
     "description": "Premium customizable shin pads for sports enthusiasts. Express yourself with our unique designs and personalization options.",
@@ -54,6 +56,10 @@
     "switch": "Switch Currency",
     "euro": "Euro",
     "czech": "Czech Koruna"
+  },
+  "product": {
+    "size": "Size",
+    "quantity": "Quantity"
   },
   "sizes": {
     "small": "Small",

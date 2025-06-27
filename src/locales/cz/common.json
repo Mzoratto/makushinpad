@@ -9,7 +9,8 @@
     "customize": "Přizpůsobit",
     "about": "O nás",
     "contact": "Kontakt",
-    "cart": "Košík"
+    "cart": "Košík",
+    "backToProducts": "Zpět na produkty"
   },
   "buttons": {
     "shopCollection": "Nakupovat kolekci",
@@ -26,7 +27,8 @@
     "cancel": "Zrušit",
     "back": "Zpět",
     "next": "Další",
-    "finish": "Dokončit"
+    "finish": "Dokončit",
+    "selectSize": "Prosím vyberte velikost"
   },
   "footer": {
     "description": "Prémiové přizpůsobitelné chrániče holení pro sportovní nadšence. Vyjádřete sebe pomocí našich jedinečných designů a možností personalizace.",
@@ -54,6 +56,10 @@
     "switch": "Změnit měnu",
     "euro": "Euro",
     "czech": "Česká koruna"
+  },
+  "product": {
+    "size": "Velikost",
+    "quantity": "Množství"
   },
   "sizes": {
     "small": "Malá",
