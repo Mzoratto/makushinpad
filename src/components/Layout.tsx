@@ -1,7 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
-import { Link } from "gatsby";
 import { Helmet } from "react-helmet";
-import { useI18next } from "gatsby-plugin-react-i18next";
+import { useI18next, Link } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
 import { CurrencyProvider, useCurrency } from "../contexts/CurrencyContext";

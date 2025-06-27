@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, HeadFC, PageProps, graphql } from "gatsby";
-import { useI18next } from "gatsby-plugin-react-i18next";
+import { HeadFC, PageProps, graphql } from "gatsby";
+import { useI18next, Link } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import { Helmet } from "react-helmet";
 
