@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "gatsby";
+import { Link } from "gatsby-plugin-react-i18next";
 import { useCurrency } from "../contexts/CurrencyContext";
 import { getProductPrice, formatPrice } from "../utils/priceUtils";
 

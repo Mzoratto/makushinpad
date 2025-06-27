@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { graphql, Link } from "gatsby";
-import { useI18next } from "gatsby-plugin-react-i18next";
+import { graphql } from "gatsby";
+import { useI18next, Link } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import { useCurrency } from "../contexts/CurrencyContext";
 import { getProductPrice, formatPrice } from "../utils/priceUtils";
@@ -160,7 +160,16 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
 };
 
 export const query = graphql`
-  query ProductQuery($id: String!) {
+  query ProductQuery($id: String!, $language: String!) {
+    locales: allLocale(filter: {language: {eq: $language}}) {
+      edges {
+        node {
+          ns
+          data
+          language
+        }
+      }
+    }
     markdownRemark(id: { eq: $id }) {
       html
       frontmatter {

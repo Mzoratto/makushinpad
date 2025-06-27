@@ -47,7 +47,7 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors;
   }
 
-  // Create product pages
+  // Create product pages - these will be processed by gatsby-plugin-react-i18next
   const products = result.data.allMarkdownRemark.edges;
   products.forEach(({ node }) => {
     createPage({
