@@ -535,14 +535,19 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
         <div className="prose max-w-none">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Description</h2>
           <p className="text-gray-700 mb-4">
-            With the PRO personalised shin pads package, you have the ability to add multiple uploads to your personalised shin pad design.
-            We will send you further instructions after you place your order so we can provide you with the best shin pad design possible.
-            There is no limit to how many images you would like to upload with the PRO personalised shin pad package.
+            Perfectly snug and stylish, they're the ultimate companion to our Personalised Shin Pads. Available in small and medium fittings, you'll be field-ready in no time!
+          </p>
+          <p className="text-gray-700 mb-4">
+            Introducing our top-of-the-line Shin Pad – the ultimate companion to our best-selling Personalised Shin Pads. Elevate your game and complete your gear with these sleek and stylish shin pad.
+          </p>
+          <p className="text-gray-700 mb-4">
+            Crafted with precision and attention to detail, these shin pad will make you stand out on the field. Our shin guard sleeves are guaranteed to match your style and preference.
+          </p>
+          <p className="text-gray-700 mb-4">
+            Available in small and medium fittings, our shin pad sleeves cater to athletes of all ages and sizes, ensuring a comfortable and secure fit that will not restrict your movement.
           </p>
           <p className="text-gray-700">
-            Please ensure you review your PRO personalised shin pads customisation options. With the PRO personalised shin pad package
-            you can choose to upload multiple images, add a backdrop colour, add text to both the left and right shin pad alongside your number.
-            We also have an additional requirements box where we invite you to make any additional request.
+            In summary, our Shin Pad are a must-have accessory for any athlete looking to elevate their game and make a statement on the field. With their stylish design, secure fitting. So, don't wait, get your pair today and experience the difference!
           </p>
         </div>
       </div>
