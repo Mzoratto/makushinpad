@@ -15,13 +15,14 @@ const loaders = require("@medusajs/medusa/dist/loaders/index").default
       })
       const configModule = container.resolve("configModule")
       const port = parseInt(process.env.PORT) || 9000
+      const host = process.env.HOST || "0.0.0.0"
 
       const server = GracefulShutdownServer.create(
-        app.listen(port, (err) => {
+        app.listen(port, host, (err) => {
           if (err) {
             return
           }
-          console.log(`🚀 Shin Shop Backend is ready at: http://localhost:${port}`)
+          console.log(`🚀 Shin Shop Backend is ready at: http://${host}:${port}`)
           console.log(`📊 Admin Panel is ready at: http://localhost:7001`)
         })
       )

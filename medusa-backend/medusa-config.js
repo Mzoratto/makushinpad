@@ -96,6 +96,11 @@ const projectConfig = {
   store_cors: STORE_CORS,
   database_url: DATABASE_URL,
   admin_cors: ADMIN_CORS,
+  // Server configuration for Render deployment
+  http: {
+    host: process.env.HOST || "0.0.0.0",
+    port: process.env.PORT || 9000,
+  },
   // Uncomment the following lines to enable REDIS
   // redis_url: REDIS_URL
 };
