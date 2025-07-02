@@ -1,6 +1,9 @@
 import { Currency } from '../contexts/CurrencyContext';
 
-// Fixed pricing structure based on requirements
+// Export currency type for use in other files
+export type CurrencyType = 'czk' | 'eur';
+
+// Fixed pricing structure based on requirements (legacy - now using Medusa.js)
 export const PRODUCT_PRICES = {
   // Main products (regular products)
   main: {
@@ -106,4 +109,61 @@ export const shouldShowFromPrice = (sizes: Array<{ price: number }>): boolean =>
 export const getLowestPrice = (sizes: Array<{ price: number }>): number => {
   if (!sizes || sizes.length === 0) return 0;
   return Math.min(...sizes.map(size => size.price));
+};
+
+/**
+ * Medusa.js specific price formatting utilities
+ */
+
+/**
+ * Parse price from Medusa (which stores prices in cents/smallest unit)
+ */
+export const parseMedusaPrice = (amount: number, currency: CurrencyType): number => {
+  // Medusa stores prices in smallest currency unit (cents for EUR, haléře for CZK)
+  return amount / 100;
+};
+
+/**
+ * Convert price to Medusa format (smallest currency unit)
+ */
+export const toMedusaPrice = (amount: number, currency: CurrencyType): number => {
+  // Convert to smallest currency unit
+  return Math.round(amount * 100);
+};
+
+/**
+ * Format price for Medusa.js integration (handles both legacy and new format)
+ */
+export const formatMedusaPrice = (amount: number, currencyCode: string): string => {
+  const currency = currencyCode.toLowerCase() as CurrencyType;
+  const price = parseMedusaPrice(amount, currency);
+
+  if (currency === 'czk') {
+    // Czech format: "899 Kč"
+    return `${Math.round(price)} Kč`;
+  } else {
+    // EUR format: "35,00 €" (European standard with comma decimal separator)
+    return `${price.toFixed(2).replace('.', ',')} €`;
+  }
+};
+
+/**
+ * Validate price input
+ */
+export const isValidPrice = (price: string | number): boolean => {
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  return !isNaN(numPrice) && numPrice >= 0 && isFinite(numPrice);
+};
+
+/**
+ * Round price to appropriate precision for currency
+ */
+export const roundPrice = (amount: number, currency: CurrencyType): number => {
+  if (currency === 'czk') {
+    // Round to nearest koruna
+    return Math.round(amount);
+  } else {
+    // Round to nearest cent
+    return Math.round(amount * 100) / 100;
+  }
 };

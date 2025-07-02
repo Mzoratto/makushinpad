@@ -83,7 +83,9 @@
       "priceAsc": "Price: Low to High",
       "priceDesc": "Price: High to Low",
       "newest": "Newest First"
-    }
+    },
+    "noProducts": "No Products Found",
+    "noProductsDescription": "We couldn't find any products. Please try again later or contact support."
   },
   "customize": {
     "title": "PRO Personalised Shin Pads | Shin Shop",
@@ -118,5 +120,71 @@
     "heading": "404 - Page Not Found",
     "message": "Sorry, the page you are looking for doesn't exist.",
     "backHome": "Back to Home"
+  },
+  "checkout": {
+    "title": "Checkout | Shin Shop",
+    "metaDescription": "Complete your order for custom shin pads. Secure checkout with multiple payment options.",
+    "pageTitle": "Checkout",
+    "sections": {
+      "contact": "Contact Information",
+      "billing": "Billing Address",
+      "shipping": "Shipping Address",
+      "orderSummary": "Order Summary"
+    },
+    "form": {
+      "email": "Email",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "address1": "Address",
+      "address2": "Address Line 2",
+      "city": "City",
+      "postalCode": "Postal Code",
+      "country": "Country",
+      "phone": "Phone",
+      "sameAsBilling": "Same as billing address"
+    },
+    "buttons": {
+      "completeOrder": "Complete Order",
+      "processing": "Processing..."
+    },
+    "validation": {
+      "required": "{{field}} is required"
+    },
+    "error": {
+      "general": "An error occurred during checkout. Please try again."
+    }
+  },
+  "orderConfirmation": {
+    "title": "Order Confirmation | Shin Shop",
+    "metaDescription": "Your order confirmation and next steps.",
+    "orderNumber": "Order Number",
+    "success": {
+      "title": "Order Confirmed!",
+      "message": "Thank you for your purchase",
+      "description": "We've received your order and will begin processing it shortly. You'll receive an email confirmation with your order details."
+    },
+    "failed": {
+      "title": "Payment Failed",
+      "message": "There was an issue processing your payment",
+      "description": "Please try again or contact our support team for assistance."
+    },
+    "pending": {
+      "title": "Payment Pending",
+      "message": "Your payment is being processed",
+      "description": "Please wait while we confirm your payment. This may take a few minutes."
+    },
+    "buttons": {
+      "continueShopping": "Continue Shopping",
+      "contactSupport": "Contact Support",
+      "tryAgain": "Try Again",
+      "checkStatus": "Check Status"
+    },
+    "nextSteps": {
+      "title": "What happens next?",
+      "emailConfirmation": "You'll receive an email confirmation",
+      "processing": "We'll start processing your order",
+      "shipping": "Your order will be shipped within 3-5 business days",
+      "tracking": "You'll receive tracking information once shipped"
+    }
   }
 }

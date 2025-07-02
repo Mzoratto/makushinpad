@@ -3,7 +3,9 @@ import { Helmet } from "react-helmet";
 import { useI18next, Link } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
+import CartButton from "./CartButton";
 import { CurrencyProvider, useCurrency } from "../contexts/CurrencyContext";
+import { CartProvider } from "../contexts/CartContext";
 import "../styles/global.css";
 
 interface LayoutProps {
@@ -18,53 +20,10 @@ const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
   // Get current language
   const currentLanguage = i18n.language || 'en';
 
-  // Update Snipcart settings when language/currency changes
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const snipcartDiv = document.getElementById('snipcart');
-      if (snipcartDiv) {
-        // Update existing div with current language/currency
-        snipcartDiv.setAttribute('data-currency', currency);
-        snipcartDiv.setAttribute('data-locale', currentLanguage);
-        console.log('Snipcart settings updated:', { currency, locale: currentLanguage });
-      }
-    }
-  }, [currency, currentLanguage]);
-
   return (
     <div className="flex flex-col min-h-screen">
       <Helmet>
-        <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.3.1/default/snipcart.css" />
-        <script>
-          {`
-            // Initialize Snipcart settings and div BEFORE loading the script
-            // Force rebuild: ${new Date().toISOString()}
-            window.SnipcartSettings = {
-              publicApiKey: "MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz",
-              loadStrategy: "on-user-interaction",
-              modalStyle: "side",
-              currency: "${currency}",
-              locale: "${currentLanguage}"
-            };
-
-            // Create Snipcart div immediately
-            document.addEventListener('DOMContentLoaded', function() {
-              if (!document.getElementById('snipcart')) {
-                var snipcartDiv = document.createElement('div');
-                snipcartDiv.id = 'snipcart';
-                snipcartDiv.hidden = true;
-                snipcartDiv.setAttribute('data-api-key', 'MDBkYzU2MzItMDA1YS00ZWU3LThjM2ItZDUwMTU1MzMyMzI5NjM4ODMzNjQxODcxNzUwODcz');
-                snipcartDiv.setAttribute('data-config-modal-style', 'side');
-                snipcartDiv.setAttribute('data-config-add-product-behavior', 'none');
-                snipcartDiv.setAttribute('data-currency', '${currency}');
-                snipcartDiv.setAttribute('data-locale', '${currentLanguage}');
-                document.body.appendChild(snipcartDiv);
-                console.log('Snipcart div created with API key');
-              }
-            });
-          `}
-        </script>
-        <script src="https://cdn.snipcart.com/themes/v3.3.1/default/snipcart.js"></script>
+        {/* Medusa.js integration - no external scripts needed */}
       </Helmet>
       <header className="bg-primary text-white">
         <div className="container-custom py-4">
@@ -101,23 +60,7 @@ const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
                     </Link>
                   </li>
                   <li>
-                    <button className="snipcart-checkout flex items-center hover:text-gray-200">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                      {t('common:navigation.cart')} (<span className="snipcart-items-count">0</span>)
-                    </button>
+                    <CartButton />
                   </li>
                 </ul>
               </nav>
@@ -226,7 +169,7 @@ const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </footer>
 
-      {/* Snipcart container is now created programmatically in useEffect */}
+      {/* Medusa.js cart integration complete */}
 
 
     </div>
@@ -237,7 +180,9 @@ const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <CurrencyProvider>
-      <LayoutContent>{children}</LayoutContent>
+      <CartProvider>
+        <LayoutContent>{children}</LayoutContent>
+      </CartProvider>
     </CurrencyProvider>
   );
 };

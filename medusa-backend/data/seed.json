@@ -1,0 +1,308 @@
+{
+  "store": {
+    "currencies": ["czk", "eur"],
+    "default_currency_code": "czk",
+    "countries": ["cz", "sk", "de", "at"],
+    "default_country_code": "cz"
+  },
+  "users": [
+    {
+      "email": "admin@shinshop.com",
+      "password": "supersecret"
+    }
+  ],
+  "regions": [
+    {
+      "name": "Czech Republic",
+      "currency_code": "czk",
+      "tax_rate": 21,
+      "payment_providers": ["manual", "mollie"],
+      "fulfillment_providers": ["manual"],
+      "countries": ["cz"]
+    },
+    {
+      "name": "Europe",
+      "currency_code": "eur", 
+      "tax_rate": 20,
+      "payment_providers": ["manual", "mollie"],
+      "fulfillment_providers": ["manual"],
+      "countries": ["sk", "de", "at"]
+    }
+  ],
+  "shipping_options": [
+    {
+      "name": "Standard Shipping CZ",
+      "region_id": "reg_01",
+      "provider_id": "manual",
+      "data": {
+        "id": "manual-fulfillment"
+      },
+      "price_type": "flat_rate",
+      "amount": 12500,
+      "is_return": false,
+      "admin_only": false
+    },
+    {
+      "name": "Express Shipping CZ",
+      "region_id": "reg_01", 
+      "provider_id": "manual",
+      "data": {
+        "id": "manual-fulfillment"
+      },
+      "price_type": "flat_rate",
+      "amount": 25000,
+      "is_return": false,
+      "admin_only": false
+    },
+    {
+      "name": "Standard Shipping EU",
+      "region_id": "reg_02",
+      "provider_id": "manual", 
+      "data": {
+        "id": "manual-fulfillment"
+      },
+      "price_type": "flat_rate",
+      "amount": 800,
+      "is_return": false,
+      "admin_only": false
+    }
+  ],
+  "products": [
+    {
+      "title": "Custom Shin Pad - Premium",
+      "subtitle": "Professional customizable shin pad",
+      "description": "High-quality shin pad with full customization options including text, colors, and uploaded designs. Perfect for professional players.",
+      "handle": "custom-shin-pad-premium",
+      "is_giftcard": false,
+      "status": "published",
+      "thumbnail": "https://via.placeholder.com/300x300?text=Premium+Shin+Pad",
+      "weight": 200,
+      "length": 25,
+      "height": 15,
+      "width": 10,
+      "hs_code": "9506.91",
+      "origin_country": "cz",
+      "mid_code": "SHIN-PREM",
+      "material": "High-grade plastic with foam padding",
+      "metadata": {
+        "customizable": true,
+        "custom_fields": [
+          "size",
+          "player_number", 
+          "left_shin_text",
+          "right_shin_text",
+          "additional_text",
+          "text_color",
+          "backdrop_color",
+          "font_family",
+          "uploaded_image",
+          "additional_requirements"
+        ],
+        "max_text_length": 20,
+        "supported_image_formats": ["jpg", "png", "svg"],
+        "max_image_size": "50MB"
+      },
+      "options": [
+        {
+          "title": "Size",
+          "values": ["S", "M", "L", "XL"]
+        }
+      ],
+      "variants": [
+        {
+          "title": "Premium Shin Pad - Size S",
+          "sku": "SHIN-PREM-S-CZK",
+          "inventory_quantity": 100,
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk",
+              "amount": 99900
+            },
+            {
+              "currency_code": "eur", 
+              "amount": 3996
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01",
+              "value": "S"
+            }
+          ]
+        },
+        {
+          "title": "Premium Shin Pad - Size M",
+          "sku": "SHIN-PREM-M-CZK", 
+          "inventory_quantity": 100,
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk",
+              "amount": 99900
+            },
+            {
+              "currency_code": "eur",
+              "amount": 3996
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01",
+              "value": "M"
+            }
+          ]
+        },
+        {
+          "title": "Premium Shin Pad - Size L",
+          "sku": "SHIN-PREM-L-CZK",
+          "inventory_quantity": 100, 
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk",
+              "amount": 99900
+            },
+            {
+              "currency_code": "eur",
+              "amount": 3996
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01",
+              "value": "L"
+            }
+          ]
+        },
+        {
+          "title": "Premium Shin Pad - Size XL",
+          "sku": "SHIN-PREM-XL-CZK",
+          "inventory_quantity": 100,
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk", 
+              "amount": 99900
+            },
+            {
+              "currency_code": "eur",
+              "amount": 3996
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01",
+              "value": "XL"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Custom Shin Pad - Standard",
+      "subtitle": "Affordable customizable shin pad",
+      "description": "Quality shin pad with basic customization options. Great for amateur players and youth teams.",
+      "handle": "custom-shin-pad-standard",
+      "is_giftcard": false,
+      "status": "published", 
+      "thumbnail": "https://via.placeholder.com/300x300?text=Standard+Shin+Pad",
+      "weight": 150,
+      "length": 23,
+      "height": 12,
+      "width": 8,
+      "hs_code": "9506.91",
+      "origin_country": "cz",
+      "mid_code": "SHIN-STD",
+      "material": "Standard plastic with basic padding",
+      "metadata": {
+        "customizable": true,
+        "custom_fields": [
+          "size",
+          "player_number",
+          "left_shin_text", 
+          "right_shin_text",
+          "text_color",
+          "additional_requirements"
+        ],
+        "max_text_length": 15,
+        "supported_image_formats": ["jpg", "png"],
+        "max_image_size": "10MB"
+      },
+      "options": [
+        {
+          "title": "Size",
+          "values": ["S", "M", "L"]
+        }
+      ],
+      "variants": [
+        {
+          "title": "Standard Shin Pad - Size S",
+          "sku": "SHIN-STD-S-CZK",
+          "inventory_quantity": 200,
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk",
+              "amount": 79900
+            },
+            {
+              "currency_code": "eur",
+              "amount": 3196
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01",
+              "value": "S"
+            }
+          ]
+        },
+        {
+          "title": "Standard Shin Pad - Size M",
+          "sku": "SHIN-STD-M-CZK",
+          "inventory_quantity": 200,
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk",
+              "amount": 79900
+            },
+            {
+              "currency_code": "eur",
+              "amount": 3196
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01", 
+              "value": "M"
+            }
+          ]
+        },
+        {
+          "title": "Standard Shin Pad - Size L",
+          "sku": "SHIN-STD-L-CZK",
+          "inventory_quantity": 200,
+          "manage_inventory": true,
+          "prices": [
+            {
+              "currency_code": "czk",
+              "amount": 79900
+            },
+            {
+              "currency_code": "eur",
+              "amount": 3196
+            }
+          ],
+          "options": [
+            {
+              "option_id": "opt_01",
+              "value": "L"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

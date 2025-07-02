@@ -83,7 +83,9 @@
       "priceAsc": "Cena: Od nejnižší",
       "priceDesc": "Cena: Od nejvyšší",
       "newest": "Nejnovější první"
-    }
+    },
+    "noProducts": "Žádné produkty nenalezeny",
+    "noProductsDescription": "Nepodařilo se nám najít žádné produkty. Zkuste to prosím později nebo kontaktujte podporu."
   },
   "customize": {
     "title": "Přizpůsobte si chrániče holení | Shin Shop",
@@ -118,5 +120,71 @@
     "heading": "404 - Stránka nenalezena",
     "message": "Omlouváme se, stránka kterou hledáte neexistuje.",
     "backHome": "Zpět domů"
+  },
+  "checkout": {
+    "title": "Pokladna | Shin Shop",
+    "metaDescription": "Dokončete svou objednávku vlastních chráničů holení. Bezpečná pokladna s více platebními možnostmi.",
+    "pageTitle": "Pokladna",
+    "sections": {
+      "contact": "Kontaktní informace",
+      "billing": "Fakturační adresa",
+      "shipping": "Doručovací adresa",
+      "orderSummary": "Souhrn objednávky"
+    },
+    "form": {
+      "email": "Email",
+      "firstName": "Jméno",
+      "lastName": "Příjmení",
+      "address1": "Adresa",
+      "address2": "Adresa řádek 2",
+      "city": "Město",
+      "postalCode": "PSČ",
+      "country": "Země",
+      "phone": "Telefon",
+      "sameAsBilling": "Stejné jako fakturační adresa"
+    },
+    "buttons": {
+      "completeOrder": "Dokončit objednávku",
+      "processing": "Zpracovává se..."
+    },
+    "validation": {
+      "required": "{{field}} je povinné"
+    },
+    "error": {
+      "general": "Při zpracování objednávky došlo k chybě. Zkuste to prosím znovu."
+    }
+  },
+  "orderConfirmation": {
+    "title": "Potvrzení objednávky | Shin Shop",
+    "metaDescription": "Potvrzení vaší objednávky a další kroky.",
+    "orderNumber": "Číslo objednávky",
+    "success": {
+      "title": "Objednávka potvrzena!",
+      "message": "Děkujeme za váš nákup",
+      "description": "Přijali jsme vaši objednávku a brzy ji začneme zpracovávat. Obdržíte emailové potvrzení s detaily objednávky."
+    },
+    "failed": {
+      "title": "Platba selhala",
+      "message": "Při zpracování vaší platby došlo k problému",
+      "description": "Zkuste to prosím znovu nebo kontaktujte náš tým podpory."
+    },
+    "pending": {
+      "title": "Platba čeká na zpracování",
+      "message": "Vaše platba se zpracovává",
+      "description": "Počkejte prosím, dokud nepotvrdíme vaši platbu. Může to trvat několik minut."
+    },
+    "buttons": {
+      "continueShopping": "Pokračovat v nákupu",
+      "contactSupport": "Kontaktovat podporu",
+      "tryAgain": "Zkusit znovu",
+      "checkStatus": "Zkontrolovat stav"
+    },
+    "nextSteps": {
+      "title": "Co bude následovat?",
+      "emailConfirmation": "Obdržíte emailové potvrzení",
+      "processing": "Začneme zpracovávat vaši objednávku",
+      "shipping": "Vaše objednávka bude odeslána do 3-5 pracovních dnů",
+      "tracking": "Obdržíte informace o sledování zásilky po odeslání"
+    }
   }
 }

@@ -511,6 +511,8 @@ const CustomizePage: React.FC<CustomizePageProps> = ({ data }) => {
               data-item-custom10-value={additionalRequirements}
               data-item-custom11-name="Uploaded Image"
               data-item-custom11-value={uploadedFileName}
+              data-item-custom12-name="Image Data"
+              data-item-custom12-value={uploadedImage || ""}
             >
               {selectedProduct && selectedSize
                 ? `Add to Cart - ${formatPrice(calculatePrice(), currency)}`

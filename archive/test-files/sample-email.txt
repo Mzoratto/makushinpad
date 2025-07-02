@@ -1,0 +1,55 @@
+THE SHIN SHOP - CUSTOM ORDER NOTIFICATION
+==========================================
+
+Order ID: SHIN-2024-001
+Date: January 15, 2024 at 2:30 PM CET
+
+CUSTOMER INFORMATION
+-------------------
+Name: Jan Novák
+Email: jan.novak@email.cz
+Phone: +420 123 456 789
+Billing Address: Wenceslas Square 1, Prague 1, 110 00, Czech Republic
+Shipping Address: Sportovní 15, Prague 6, 160 00, Czech Republic
+
+CUSTOMIZATION DETAILS
+====================
+
+1. Custom Shin Pad - Premium (Qty: 1) - 999 CZK
+   Customizations:
+   - Size: M
+   - Player Number: 10
+   - Left Shin Text: SPARTA
+   - Right Shin Text: PRAHA
+   - Additional Text: NEVER GIVE UP
+   - Text Color: #DC143C
+   - Text Font: Arial Bold
+   - Backdrop Color: #FFFFFF
+   - Additional Requirements: Please make the text extra bold and ensure high contrast. This is for a professional player in the Czech First League.
+   - Uploaded Image: sparta-logo.png
+
+2. Custom Shin Pad - Youth (Qty: 1) - 125 CZK
+   Customizations:
+   - Size: S
+   - Player Number: 7
+   - Left Shin Text: JUNIOR
+   - Right Shin Text: 2024
+   - Text Color: #0066CC
+   - Text Font: Times New Roman
+   - Backdrop Color: #F0F8FF
+   - Additional Requirements: Simple design for youth player, age 12
+
+ORDER SUMMARY
+============
+Payment Method: Credit Card (Visa ending in 4242)
+Total Amount: 1,124 CZK
+
+NEXT STEPS:
+----------
+- Review all customization details carefully
+- Contact customer if clarification is needed
+- Begin production process
+- Send production updates to customer
+
+This is an automated notification from your Shin Shop e-commerce system.
+Generated: 7/1/2025, 4:40:35 PM

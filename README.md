@@ -1,26 +1,38 @@
 # Shin Shop - E-commerce Website
 
-A modern e-commerce website for customizable shin pads built with Gatsby.js, React, and Tailwind CSS with internationalization support for English and Czech.
+A modern e-commerce website for customizable shin pads built with Gatsby.js and Medusa.js, featuring internationalization, custom product configurator, and integrated shopping cart with Mollie payments.
 
 ## 🚀 Features
 
-- **Product Catalog**: Browse through various shin pad designs
+- **Product Catalog**: Browse through tiered shin pad designs (Youth, Standard, Premium, Professional)
 - **Customization Tool**: Interactive canvas for personalizing shin pads with images, text, and colors
-- **Shopping Cart**: Integrated with Snipcart for seamless checkout
-- **Payment Processing**: Secure payments through Stripe
+- **Shopping Cart**: Powered by Medusa.js for complete e-commerce control
+- **Payment Processing**: Secure payments through Mollie (CZK/EUR support)
 - **Internationalization**: Full i18n support for English (EN) and Czech (CZ)
 - **Language Switching**: Dynamic language toggle in header
+- **Currency Support**: CZK (primary) and EUR with automatic conversion
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Performance Optimized**: Built with Gatsby for fast loading times
+- **Email Notifications**: Automated custom order notifications
 
 ## 🛠 Tech Stack
 
-- **Frontend**: Gatsby.js 5.14.x, React 18.2.0, TypeScript
-- **Styling**: Tailwind CSS
-- **E-commerce**: Snipcart
-- **Payments**: Stripe
+### Frontend
+- **Framework**: Gatsby.js 5.14.x, React 18.2.0, TypeScript
+- **Styling**: Tailwind CSS 3.x
 - **Customization**: React-Konva 18.2.10, Konva.js 9.3.x
 - **Internationalization**: react-i18next, gatsby-plugin-react-i18next
+- **State Management**: React Context API
+
+### Backend
+- **E-commerce**: Medusa.js (headless commerce platform)
+- **Database**: PostgreSQL
+- **Payments**: Mollie (CZK/EUR support)
+- **Email**: Nodemailer with Gmail/SMTP
+
+### Deployment
+- **Frontend**: Netlify
+- **Backend**: Railway/Heroku
 - **Content**: Markdown files for products
 
 ## 📋 Prerequisites
@@ -29,41 +41,49 @@ A modern e-commerce website for customizable shin pads built with Gatsby.js, Rea
 
 - **Node.js**: v20.x LTS (20.18.0 recommended)
 - **npm**: v10.x or higher
+- **PostgreSQL**: For Medusa.js backend (or cloud database)
 - **nvm**: Recommended for Node.js version management
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### 1. Node.js Version Setup
-
-```bash
-# Install and use Node.js 20.18.0
-nvm install 20.18.0
-nvm use 20.18.0
-nvm alias default 20.18.0
-
-# Verify versions
-node --version  # Should show v20.18.0
-npm --version   # Should show v10.x.x
-```
-
-### 2. Installation
+### Option 1: Frontend Only (Demo Mode)
 
 ```bash
-# Clone the repository
+# Clone and setup frontend
 git clone <repository-url>
 cd shinshop
-
-# Install dependencies (use npm ci for production)
+nvm use 20  # Use Node.js 20.x LTS
 npm install
-
-# Start the development server
 npm run develop
 ```
 
-### 3. Access the Application
+**Access**: <http://localhost:8000> (limited functionality without backend)
 
-- **Main site**: http://localhost:8000/
-- **GraphiQL IDE**: http://localhost:8000/___graphql
+### Option 2: Full Stack Setup
+
+```bash
+# 1. Setup backend first
+cd medusa-backend
+./setup.sh  # Follow the interactive setup
+
+# 2. Start backend
+npm run dev  # Backend: http://localhost:9000
+
+# 3. Setup frontend (new terminal)
+cd ..
+npm install
+npm run develop  # Frontend: http://localhost:8000
+```
+
+**Access**:
+- **Frontend**: <http://localhost:8000>
+- **Backend API**: <http://localhost:9000>
+- **Admin Panel**: <http://localhost:7001>
+
+### 📚 Setup Guides
+- **Complete Setup**: [`docs/setup/MEDUSA_SETUP_GUIDE.md`](docs/setup/MEDUSA_SETUP_GUIDE.md)
+- **Payment Setup**: [`docs/setup/MOLLIE_SETUP_GUIDE.md`](docs/setup/MOLLIE_SETUP_GUIDE.md)
+- **Product Catalog**: [`docs/setup/PRODUCT_CATALOG_GUIDE.md`](docs/setup/PRODUCT_CATALOG_GUIDE.md)
 
 ## 📜 Available Scripts
 
@@ -98,34 +118,42 @@ src/locales/
 ## 📁 Project Structure
 
 ```
-src/
-├── components/          # Reusable React components
-│   ├── Layout.tsx      # Main layout with i18n header
-│   ├── LanguageSwitcher.tsx  # Language toggle component
-│   └── ...
-├── pages/              # Gatsby pages
-├── locales/            # i18n translation files
-├── styles/             # Global styles and Tailwind config
-├── images/             # Static images
-└── templates/          # Page templates
-
-content/
-└── products/           # Product markdown files
+shinshop/
+├── 📂 src/                     # Gatsby frontend source
+├── 📂 medusa-backend/          # Medusa.js backend
+├── 📂 docs/                    # Organized documentation
+│   ├── setup/                 # Setup guides
+│   ├── guides/                # Usage guides
+│   └── reference/             # Technical reference
+├── 📂 archive/                 # Legacy files
+├── 📂 netlify/                 # Netlify Functions
+├── 📂 content/                 # Markdown content
+└── 📄 README.md                # This file
 ```
 
-## ⚙️ Configuration
+**Detailed Structure**: [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)
 
-### Snipcart Setup
+## 🔄 Migration Status
 
-1. Sign up for a Snipcart account
-2. Add your public API key to the Snipcart script in `src/components/Layout.tsx`
-3. Configure multi-language support in Snipcart dashboard
+This project has been **migrated from Snipcart to Medusa.js** for better control and cost savings.
 
-### Stripe Setup
+### ✅ Completed
+- **E-commerce Platform**: Snipcart → Medusa.js
+- **Payment Processing**: Stripe → Mollie (CZK/EUR)
+- **Backend Architecture**: Serverless → Full backend
+- **Documentation**: Scattered → Organized structure
+- **Project Cleanup**: Legacy files moved to `archive/`
 
-1. Create a Stripe account
-2. Configure your Stripe keys in Snipcart dashboard
-3. Set up currency support for USD and CZK
+### 🚀 Benefits
+- **Cost Savings**: No transaction fees (Snipcart was 2% + fees)
+- **Full Control**: Own your data and customize everything
+- **Better Features**: Advanced product variants, inventory management
+- **Czech Market**: Native CZK support with Mollie
+
+### 📚 Documentation
+- **Setup Guides**: [`docs/setup/`](docs/setup/)
+- **Migration Notes**: [`archive/`](archive/) (legacy files)
+- **Project Structure**: [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)
 
 ## 🔧 Development Notes
 

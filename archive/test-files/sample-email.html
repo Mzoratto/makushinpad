@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Shin Pad Order - SHIN-2024-001</title>
+  <style>
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background-color: #f9fafb;
+    }
+    
+    .email-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo-section h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+    
+    .tagline {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    
+    .order-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    
+    .order-date {
+      text-align: center;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    
+    .section {
+      padding: 30px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #1f2937;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+    }
+    
+    .customer-section {
+      background: #f0fdf4;
+    }
+    
+    .customization-section {
+      background: #fffbeb;
+    }
+    
+    .summary-section {
+      background: #fdf2f8;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .info-item.full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    
+    .value {
+      color: #1f2937;
+    }
+    
+    .value a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    
+    .product-item {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .product-name {
+      color: #1f2937;
+      font-size: 18px;
+    }
+    
+    .product-meta {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .quantity {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .price {
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .customizations h4 {
+      margin-bottom: 15px;
+      color: #374151;
+    }
+    
+    .customization-grid {
+      display: grid;
+      gap: 12px;
+    }
+    
+    .customization-item {
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 3px solid #f59e0b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .custom-label {
+      font-weight: 600;
+      color: #374151;
+      min-width: 120px;
+    }
+    
+    .custom-value {
+      flex: 1;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    
+    .color-preview {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #e5e7eb;
+      display: inline-block;
+    }
+    
+    .image-indicator {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    
+    .summary-grid {
+      display: grid;
+      gap: 15px;
+    }
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+    
+    .total-item {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 15px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .total-amount {
+      color: #dc2626;
+      font-size: 20px;
+    }
+    
+    .footer {
+      background: #f8fafc;
+      padding: 30px;
+    }
+    
+    .action-items {
+      margin-bottom: 20px;
+    }
+    
+    .action-items h3 {
+      margin-bottom: 10px;
+      color: #374151;
+    }
+    
+    .action-items ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .action-items li {
+      padding: 5px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .action-items li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #10b981;
+      font-weight: bold;
+    }
+    
+    .footer-note {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 20px;
+    }
+    
+    @media (max-width: 600px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .product-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .customization-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .custom-value {
+        justify-content: flex-start;
+      }
+    }
+  
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    
+  <div class="header">
+    <div class="logo-section">
+      <h1>🎯 The Shin Shop</h1>
+      <p class="tagline">Custom Shin Pad Order Notification</p>
+    </div>
+    <div class="order-info">
+      <div class="order-badge">
+        <strong>Order #SHIN-2024-001</strong>
+      </div>
+      <p class="order-date">January 15, 2024 at 2:30 PM CET</p>
+    </div>
+  </div>
+    
+  <div class="section customer-section">
+    <h2 class="section-title">👤 Customer Information</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="label">Name:</span>
+        <span class="value">Jan Novák</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Email:</span>
+        <span class="value"><a href="mailto:jan.novak@email.cz">jan.novak@email.cz</a></span>
+      </div>
+      <div class="info-item">
+        <span class="label">Phone:</span>
+        <span class="value">+420 123 456 789</span>
+      </div>
+      <div class="info-item full-width">
+        <span class="label">Billing Address:</span>
+        <span class="value">Wenceslas Square 1, Prague 1, 110 00, Czech Republic</span>
+      </div>
+      
+      <div class="info-item full-width shipping-info">
+        <span class="label">Shipping Address:</span>
+        <span class="value">Sportovní 15, Prague 6, 160 00, Czech Republic</span>
+      </div>
+      
+    </div>
+  </div>
+    
+  <div class="section customization-section">
+    <h2 class="section-title">🎨 Customization Details</h2>
+    
+    <div class="product-item">
+      <div class="product-header">
+        <h3 class="product-name">Custom Shin Pad - Premium</h3>
+        <div class="product-meta">
+          <span class="quantity">Qty: 1</span>
+          <span class="price">999 CZK</span>
+        </div>
+      </div>
+      <div class="customizations">
+        <h4>Customization Specifications:</h4>
+        <div class="customization-grid">
+          
+      <div class="customization-item  ">
+        <span class="custom-label">Size:</span>
+        <span class="custom-value">
+          
+          M
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Player Number:</span>
+        <span class="custom-value">
+          
+          10
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Left Shin Text:</span>
+        <span class="custom-value">
+          
+          SPARTA
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Right Shin Text:</span>
+        <span class="custom-value">
+          
+          PRAHA
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Additional Text:</span>
+        <span class="custom-value">
+          
+          NEVER GIVE UP
+          
+        </span>
+      </div>
+      <div class="customization-item  color-item">
+        <span class="custom-label">Text Color:</span>
+        <span class="custom-value">
+          <span class="color-preview" style="background-color: #DC143C"></span>
+          #DC143C
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Text Font:</span>
+        <span class="custom-value">
+          
+          Arial Bold
+          
+        </span>
+      </div>
+      <div class="customization-item  color-item">
+        <span class="custom-label">Backdrop Color:</span>
+        <span class="custom-value">
+          <span class="color-preview" style="background-color: #FFFFFF"></span>
+          #FFFFFF
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Additional Requirements:</span>
+        <span class="custom-value">
+          
+          Please make the text extra bold and ensure high contrast. This is for a professional player in the Czech First League.
+          
+        </span>
+      </div>
+      <div class="customization-item image-item ">
+        <span class="custom-label">Uploaded Image:</span>
+        <span class="custom-value">
+          
+          sparta-logo.png
+           <span class="image-indicator">📎 Image attached</span>
+        </span>
+      </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="product-item">
+      <div class="product-header">
+        <h3 class="product-name">Custom Shin Pad - Youth</h3>
+        <div class="product-meta">
+          <span class="quantity">Qty: 1</span>
+          <span class="price">125 CZK</span>
+        </div>
+      </div>
+      <div class="customizations">
+        <h4>Customization Specifications:</h4>
+        <div class="customization-grid">
+          
+      <div class="customization-item  ">
+        <span class="custom-label">Size:</span>
+        <span class="custom-value">
+          
+          S
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Player Number:</span>
+        <span class="custom-value">
+          
+          7
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Left Shin Text:</span>
+        <span class="custom-value">
+          
+          JUNIOR
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Right Shin Text:</span>
+        <span class="custom-value">
+          
+          2024
+          
+        </span>
+      </div>
+      <div class="customization-item  color-item">
+        <span class="custom-label">Text Color:</span>
+        <span class="custom-value">
+          <span class="color-preview" style="background-color: #0066CC"></span>
+          #0066CC
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Text Font:</span>
+        <span class="custom-value">
+          
+          Times New Roman
+          
+        </span>
+      </div>
+      <div class="customization-item  color-item">
+        <span class="custom-label">Backdrop Color:</span>
+        <span class="custom-value">
+          <span class="color-preview" style="background-color: #F0F8FF"></span>
+          #F0F8FF
+          
+        </span>
+      </div>
+      <div class="customization-item  ">
+        <span class="custom-label">Additional Requirements:</span>
+        <span class="custom-value">
+          
+          Simple design for youth player, age 12
+          
+        </span>
+      </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+    
+  <div class="section summary-section">
+    <h2 class="section-title">💰 Order Summary</h2>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <span class="label">Payment Method:</span>
+        <span class="value">Credit Card (Visa ending in 4242)</span>
+      </div>
+      <div class="summary-item total-item">
+        <span class="label">Total Amount:</span>
+        <span class="value total-amount">1,124 CZK</span>
+      </div>
+    </div>
+  </div>
+    
+  <div class="footer">
+    <div class="action-items">
+      <h3>📋 Next Steps:</h3>
+      <ul>
+        <li>Review all customization details carefully</li>
+        <li>Contact customer if clarification is needed</li>
+        <li>Begin production process</li>
+        <li>Send production updates to customer</li>
+      </ul>
+    </div>
+    <div class="footer-note">
+      <p>This is an automated notification from your Shin Shop e-commerce system.</p>
+      <p><strong>Generated:</strong> 7/1/2025, 4:40:35 PM</p>
+    </div>
+  </div>
+  </div>
+</body>
+</html>
