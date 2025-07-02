@@ -5,7 +5,7 @@ import nodemailer from "nodemailer"
  * Email service for sending custom order notifications
  * Integrates with the existing email notification system
  */
-class EmailService extends TransactionBaseService {
+export class EmailService extends TransactionBaseService {
   private transporter: any
 
   constructor(container: any) {

@@ -1,0 +1,6 @@
+{
+  "presets": [
+    "babel-preset-medusa-package"
+  ],
+  "plugins": []
+}
