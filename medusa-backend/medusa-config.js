@@ -54,16 +54,9 @@ const plugins = [
   },
 ];
 
-// Add Mollie payment plugin if configured
-if (process.env.MOLLIE_API_KEY) {
-  plugins.push({
-    resolve: `medusa-payment-mollie`,
-    options: {
-      api_key: process.env.MOLLIE_API_KEY,
-      webhook_url: process.env.MOLLIE_WEBHOOK_URL || "http://localhost:9000/mollie/webhooks",
-    },
-  });
-}
+// Mollie payment integration will be handled via custom API endpoints
+// The medusa-payment-mollie package doesn't exist in npm registry
+// We'll implement Mollie integration through custom API routes
 
 // Add Stripe payment plugin as fallback if configured
 if (process.env.STRIPE_API_KEY) {

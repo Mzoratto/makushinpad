@@ -44,7 +44,6 @@
     "express": "^4.17.2",
     "medusa-fulfillment-manual": "^1.1.40",
     "medusa-interfaces": "^1.3.7",
-    "medusa-payment-mollie": "^1.0.0",
     "medusa-payment-stripe": "^6.0.6",
     "@mollie/api-client": "^3.7.0",
     "node-fetch": "^2.6.7",
