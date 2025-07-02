@@ -27,8 +27,7 @@
     "products:manage": "node manage-products.js",
     "products:seed-enhanced": "node seed-enhanced-products.js",
     "products:seed-enhanced-run": "npm run products:seed-enhanced && npm run seed -- -f ./data/seed-enhanced.json",
-    "verify": "node verify-install.js",
-    "postinstall": "npm run verify"
+    "verify": "node verify-install.js"
   },
   "dependencies": {
     "@medusajs/admin": "^7.1.14",
