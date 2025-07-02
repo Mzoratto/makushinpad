@@ -3,11 +3,13 @@
  * Handles the complete checkout flow with Mollie payments
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { navigate } from 'gatsby';
 import { useTranslation } from 'gatsby-plugin-react-i18next';
 import { Helmet } from 'react-helmet';
 import Layout from '../components/Layout';
+import { LoadingButton, LoadingPage } from '../components/LoadingStates';
+import { useNotifications } from '../components/NotificationSystem';
 import { useCart } from '../contexts/CartContext';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { formatMedusaPrice } from '../utils/priceUtils';
@@ -37,7 +39,9 @@ const CheckoutPage: React.FC = () => {
   const { t } = useTranslation();
   const { cart, isLoading: cartLoading } = useCart();
   const { currency } = useCurrency();
+  const { error: showError, success } = useNotifications();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<CheckoutFormData>({
     email: '',
     firstName: '',
@@ -97,71 +101,109 @@ const CheckoutPage: React.FC = () => {
   };
 
   /**
-   * Validate form data
+   * Validate form data with detailed error reporting
    */
-  const validateForm = (): boolean => {
+  const validateForm = useCallback((): boolean => {
+    const errors: Record<string, string> = {};
+
+    // Required fields validation
     const required = ['email', 'firstName', 'lastName', 'address1', 'city', 'postalCode', 'phone'];
-    
+
     for (const field of required) {
-      if (!formData[field as keyof CheckoutFormData]) {
-        alert(t('pages:checkout.validation.required', { field: t(`pages:checkout.form.${field}`) }));
-        return false;
+      const value = formData[field as keyof CheckoutFormData];
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        errors[field] = t('pages:checkout.validation.required', {
+          field: t(`pages:checkout.form.${field}`)
+        });
       }
     }
 
+    // Email validation
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = t('pages:checkout.validation.invalidEmail', 'Please enter a valid email address');
+    }
+
+    // Phone validation (basic)
+    if (formData.phone && !/^[\+]?[0-9\s\-\(\)]{8,}$/.test(formData.phone)) {
+      errors.phone = t('pages:checkout.validation.invalidPhone', 'Please enter a valid phone number');
+    }
+
+    // Shipping address validation (if different from billing)
     if (!formData.sameAsShipping) {
       const shippingRequired = ['shippingFirstName', 'shippingLastName', 'shippingAddress1', 'shippingCity', 'shippingPostalCode'];
       for (const field of shippingRequired) {
-        if (!formData[field as keyof CheckoutFormData]) {
-          alert(t('pages:checkout.validation.required', { field: t(`pages:checkout.form.${field}`) }));
-          return false;
+        const value = formData[field as keyof CheckoutFormData];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          errors[field] = t('pages:checkout.validation.required', {
+            field: t(`pages:checkout.form.${field}`)
+          });
         }
       }
     }
 
+    setValidationErrors(errors);
+
+    // Show first error as notification
+    if (Object.keys(errors).length > 0) {
+      const firstError = Object.values(errors)[0];
+      showError(
+        t('pages:checkout.validation.formErrors', 'Form validation failed'),
+        firstError
+      );
+      return false;
+    }
+
     return true;
-  };
+  }, [formData, t, showError]);
 
   /**
-   * Handle checkout submission
+   * Handle checkout submission with proper error handling
    */
-  const handleCheckout = async (e: React.FormEvent) => {
+  const handleCheckout = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
       setIsProcessing(true);
-      
+      setValidationErrors({}); // Clear any previous errors
+
       // For now, redirect to a simple order confirmation
       // In a full implementation, you would:
       // 1. Update cart with customer info
       // 2. Create payment session with Mollie
       // 3. Redirect to Mollie payment page
       // 4. Handle payment completion webhook
-      
+
       console.log('Checkout data:', { formData, cart });
-      
+
       // Simulate processing delay
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
+      // Show success message
+      success(
+        t('pages:checkout.success.title', 'Order submitted successfully'),
+        t('pages:checkout.success.message', 'Redirecting to confirmation page...')
+      );
+
       // Navigate to order confirmation
       navigate('/order-confirmation?status=success');
-      
+
     } catch (error) {
       console.error('Checkout failed:', error);
-      alert(t('pages:checkout.error.general'));
+      showError(
+        t('pages:checkout.error.title', 'Checkout failed'),
+        error instanceof Error ? error.message : t('pages:checkout.error.general')
+      );
     } finally {
       setIsProcessing(false);
     }
-  };
+  }, [formData, cart, validateForm, success, showError, t]);
 
   if (cartLoading) {
     return (
       <Layout>
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
+        <LoadingPage message={t('pages:checkout.loading', 'Loading checkout...')} />
       </Layout>
     );
   }
@@ -329,23 +371,15 @@ const CheckoutPage: React.FC = () => {
               </div>
 
               {/* Submit Button */}
-              <button
+              <LoadingButton
                 type="submit"
-                disabled={isProcessing}
-                className="w-full btn btn-primary py-3 text-lg disabled:opacity-50"
+                isLoading={isProcessing}
+                loadingText={t('pages:checkout.buttons.processing')}
+                className="w-full btn-primary py-3 text-lg"
+                disabled={Object.keys(validationErrors).length > 0}
               >
-                {isProcessing ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {t('pages:checkout.buttons.processing')}
-                  </span>
-                ) : (
-                  t('pages:checkout.buttons.completeOrder')
-                )}
-              </button>
+                {t('pages:checkout.buttons.completeOrder')}
+              </LoadingButton>
             </form>
           </div>
 

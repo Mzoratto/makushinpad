@@ -1,12 +1,15 @@
 /**
  * Medusa Product Card Component
  * Displays products from Medusa.js backend with proper pricing and add to cart functionality
+ * Enhanced with accessibility, error handling, and performance optimizations
  */
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Link, useTranslation } from 'gatsby-plugin-react-i18next';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { useCart } from '../contexts/CartContext';
+import { useNotifications } from './NotificationSystem';
+import { LoadingButton } from './LoadingStates';
 import { formatMedusaPrice, parseMedusaPrice } from '../utils/priceUtils';
 import type { MedusaProduct, MedusaVariant } from '../services/medusaClient';
 
@@ -14,20 +17,31 @@ interface MedusaProductCardProps {
   product: MedusaProduct;
   showAddToCart?: boolean;
   className?: string;
+  onAddToCart?: (product: MedusaProduct, variant: MedusaVariant) => void;
+  priority?: boolean; // For image loading priority
 }
 
 const MedusaProductCard: React.FC<MedusaProductCardProps> = ({
   product,
   showAddToCart = true,
   className = '',
+  onAddToCart,
+  priority = false,
 }) => {
   const { t } = useTranslation();
   const { currency } = useCurrency();
   const { addToCart, isLoading } = useCart();
-  const [selectedVariant, setSelectedVariant] = useState<MedusaVariant | null>(
-    product.variants?.[0] || null
+  const { success, error: showError } = useNotifications();
+
+  // Memoize initial variant selection
+  const initialVariant = useMemo(() =>
+    product.variants?.[0] || null,
+    [product.variants]
   );
+
+  const [selectedVariant, setSelectedVariant] = useState<MedusaVariant | null>(initialVariant);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   /**
    * Get the price for the current currency
@@ -58,48 +72,90 @@ const MedusaProductCard: React.FC<MedusaProductCardProps> = ({
   };
 
   /**
-   * Handle add to cart
+   * Handle add to cart with proper error handling and user feedback
    */
-  const handleAddToCart = async () => {
-    if (!selectedVariant) return;
+  const handleAddToCart = useCallback(async () => {
+    if (!selectedVariant) {
+      showError(
+        t('common:errors.noVariantSelected', 'No variant selected'),
+        t('common:errors.selectVariantFirst', 'Please select a product variant first.')
+      );
+      return;
+    }
 
     try {
       setIsAddingToCart(true);
-      
+
       // Basic metadata - can be extended for customization
       const metadata = {
         product_title: product.title,
         variant_title: selectedVariant.title,
+        tier: tier,
       };
 
       await addToCart(selectedVariant.id, 1, metadata);
-      
-      // Show success feedback (you can customize this)
-      console.log('Product added to cart successfully');
+
+      // Call optional callback
+      if (onAddToCart) {
+        onAddToCart(product, selectedVariant);
+      }
+
+      // Show success feedback
+      success(
+        t('common:cart.itemAdded', 'Added to cart'),
+        t('common:cart.itemAddedMessage', '{{product}} has been added to your cart.', {
+          product: product.title
+        })
+      );
     } catch (error) {
       console.error('Failed to add product to cart:', error);
-      // Show error feedback (you can customize this)
+      showError(
+        t('common:errors.addToCartFailed', 'Failed to add to cart'),
+        error instanceof Error ? error.message : t('common:errors.tryAgainLater', 'Please try again later.')
+      );
     } finally {
       setIsAddingToCart(false);
     }
-  };
+  }, [selectedVariant, product, tier, addToCart, onAddToCart, success, showError, t]);
 
   /**
    * Handle variant selection
    */
-  const handleVariantChange = (variantId: string) => {
+  const handleVariantChange = useCallback((variantId: string) => {
     const variant = product.variants.find(v => v.id === variantId);
     if (variant) {
       setSelectedVariant(variant);
     }
-  };
+  }, [product.variants]);
 
   /**
-   * Get product tier from metadata
+   * Handle image error
    */
-  const getProductTier = () => {
+  const handleImageError = useCallback(() => {
+    setImageError(true);
+  }, []);
+
+  /**
+   * Get product image URL with fallback
+   */
+  const getImageUrl = useMemo(() => {
+    if (imageError) return null;
+    return product.thumbnail || product.images?.[0]?.url || null;
+  }, [product.thumbnail, product.images, imageError]);
+
+  /**
+   * Check if product is out of stock
+   */
+  const isOutOfStock = useMemo(() => {
+    return !selectedVariant || !selectedVariant.inventory_quantity || selectedVariant.inventory_quantity <= 0;
+  }, [selectedVariant]);
+
+  /**
+   * Get product tier from metadata (memoized)
+   */
+  const productTier = useMemo(() => {
     return product.metadata?.tier || 'standard';
-  };
+  }, [product.metadata?.tier]);
 
   /**
    * Get tier badge color
@@ -116,28 +172,46 @@ const MedusaProductCard: React.FC<MedusaProductCardProps> = ({
 
   const displayPrice = selectedVariant ? getCurrentPrice(selectedVariant) : getLowestPrice();
   const showFrom = shouldShowFromPrice() && !selectedVariant;
-  const tier = getProductTier();
+  const imageUrl = getImageUrl;
 
   return (
-    <div className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 ${className}`}>
+    <article
+      className={`bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 ${className}`}
+      role="article"
+      aria-labelledby={`product-title-${product.id}`}
+    >
       {/* Product Image */}
       <div className="h-64 overflow-hidden relative">
-        {product.thumbnail ? (
-          <img 
-            src={product.thumbnail} 
-            alt={product.title}
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={t('common:product.imageAlt', 'Product image for {{title}}', { title: product.title })}
             className="w-full h-full object-cover"
+            onError={handleImageError}
+            loading={priority ? 'eager' : 'lazy'}
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500">{t('common:product.noImage')}</span>
+            <div className="text-center">
+              <svg className="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span className="text-gray-500 text-sm">{t('common:product.noImage')}</span>
+            </div>
           </div>
         )}
-        
+
         {/* Tier Badge */}
-        <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${getTierBadgeColor(tier)}`}>
-          {tier.toUpperCase()}
+        <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${tierBadgeColor}`}>
+          {productTier.toUpperCase()}
         </div>
+
+        {/* Out of Stock Badge */}
+        {isOutOfStock && (
+          <div className="absolute top-2 right-2 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
+            {t('common:buttons.outOfStock')}
+          </div>
+        )}
 
         {/* Customizable Badge */}
         {product.metadata?.customizable && (
@@ -206,25 +280,16 @@ const MedusaProductCard: React.FC<MedusaProductCardProps> = ({
 
             {/* Add to Cart Button */}
             {showAddToCart && selectedVariant && (
-              <button
+              <LoadingButton
+                isLoading={isAddingToCart || isLoading}
                 onClick={handleAddToCart}
-                disabled={isAddingToCart || isLoading || selectedVariant.inventory_quantity <= 0}
-                className="btn btn-primary text-sm py-1 px-3 disabled:opacity-50"
+                disabled={isOutOfStock}
+                loadingText={t('common:buttons.adding')}
+                className="btn-primary text-sm py-1 px-3"
+                aria-label={t('common:buttons.addToCartAria', 'Add {{product}} to cart', { product: product.title })}
               >
-                {isAddingToCart ? (
-                  <span className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {t('common:buttons.adding')}
-                  </span>
-                ) : selectedVariant.inventory_quantity <= 0 ? (
-                  t('common:buttons.outOfStock')
-                ) : (
-                  t('common:buttons.addToCart')
-                )}
-              </button>
+                {isOutOfStock ? t('common:buttons.outOfStock') : t('common:buttons.addToCart')}
+              </LoadingButton>
             )}
           </div>
         </div>

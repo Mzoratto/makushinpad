@@ -34,7 +34,9 @@
     "checkout": "Pokladna",
     "viewDetails": "Zobrazit detaily",
     "outOfStock": "Není skladem",
-    "retry": "Zkusit znovu"
+    "retry": "Zkusit znovu",
+    "close": "Zavřít",
+    "addToCartAria": "Přidat {{product}} do košíku"
   },
   "footer": {
     "description": "Prémiové přizpůsobitelné chrániče holení pro sportovní nadšence. Vyjádřete sebe pomocí našich jedinečných designů a možností personalizace.",
@@ -86,7 +88,8 @@
     "size": "Velikost",
     "from": "Od",
     "productionTime": "Doba výroby",
-    "lowStock": "Pouze {{count}} kusů skladem!"
+    "lowStock": "Pouze {{count}} kusů skladem!",
+    "imageAlt": "Obrázek produktu {{title}}"
   },
   "cart": {
     "title": "Nákupní košík",
@@ -94,6 +97,20 @@
     "subtotal": "Mezisoučet",
     "shipping": "Doprava",
     "tax": "DPH",
-    "total": "Celkem"
+    "total": "Celkem",
+    "itemAdded": "Přidáno do košíku",
+    "itemAddedMessage": "{{product}} byl přidán do vašeho košíku."
+  },
+  "errors": {
+    "boundary": {
+      "title": "Něco se pokazilo",
+      "message": "Došlo k neočekávané chybě. Zkuste prosím obnovit stránku.",
+      "reload": "Obnovit stránku",
+      "goHome": "Jít domů"
+    },
+    "noVariantSelected": "Není vybrána varianta",
+    "selectVariantFirst": "Nejprve prosím vyberte variantu produktu.",
+    "addToCartFailed": "Nepodařilo se přidat do košíku",
+    "tryAgainLater": "Zkuste to prosím později."
   }
 }

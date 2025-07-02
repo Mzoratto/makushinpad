@@ -148,11 +148,20 @@
       "processing": "Processing..."
     },
     "validation": {
-      "required": "{{field}} is required"
+      "required": "{{field}} is required",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPhone": "Please enter a valid phone number",
+      "formErrors": "Form validation failed"
     },
     "error": {
-      "general": "An error occurred during checkout. Please try again."
-    }
+      "general": "An error occurred during checkout. Please try again.",
+      "title": "Checkout failed"
+    },
+    "success": {
+      "title": "Order submitted successfully",
+      "message": "Redirecting to confirmation page..."
+    },
+    "loading": "Loading checkout..."
   },
   "orderConfirmation": {
     "title": "Order Confirmation | Shin Shop",

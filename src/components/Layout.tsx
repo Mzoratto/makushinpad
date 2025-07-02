@@ -4,6 +4,8 @@ import { useI18next, Link } from "gatsby-plugin-react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 import CurrencySwitcher from "./CurrencySwitcher";
 import CartButton from "./CartButton";
+import ErrorBoundary from "./ErrorBoundary";
+import { NotificationProvider } from "./NotificationSystem";
 import { CurrencyProvider, useCurrency } from "../contexts/CurrencyContext";
 import { CartProvider } from "../contexts/CartContext";
 import "../styles/global.css";
@@ -176,14 +178,18 @@ const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-// Main Layout component that provides currency context
+// Main Layout component that provides all contexts and error boundaries
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <CurrencyProvider>
-      <CartProvider>
-        <LayoutContent>{children}</LayoutContent>
-      </CartProvider>
-    </CurrencyProvider>
+    <ErrorBoundary>
+      <CurrencyProvider>
+        <CartProvider>
+          <NotificationProvider>
+            <LayoutContent>{children}</LayoutContent>
+          </NotificationProvider>
+        </CartProvider>
+      </CurrencyProvider>
+    </ErrorBoundary>
   );
 };
 

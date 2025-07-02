@@ -148,11 +148,20 @@
       "processing": "Zpracovává se..."
     },
     "validation": {
-      "required": "{{field}} je povinné"
+      "required": "{{field}} je povinné",
+      "invalidEmail": "Zadejte prosím platnou emailovou adresu",
+      "invalidPhone": "Zadejte prosím platné telefonní číslo",
+      "formErrors": "Ověření formuláře selhalo"
     },
     "error": {
-      "general": "Při zpracování objednávky došlo k chybě. Zkuste to prosím znovu."
-    }
+      "general": "Při zpracování objednávky došlo k chybě. Zkuste to prosím znovu.",
+      "title": "Objednávka selhala"
+    },
+    "success": {
+      "title": "Objednávka byla úspěšně odeslána",
+      "message": "Přesměrování na stránku potvrzení..."
+    },
+    "loading": "Načítání pokladny..."
   },
   "orderConfirmation": {
     "title": "Potvrzení objednávky | Shin Shop",

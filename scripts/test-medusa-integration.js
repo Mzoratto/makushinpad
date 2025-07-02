@@ -43,13 +43,16 @@ function logInfo(message) {
  */
 function checkRequiredFiles() {
   logInfo('Checking required files...');
-  
+
   const requiredFiles = [
     'src/services/medusaClient.ts',
     'src/contexts/CartContext.tsx',
     'src/components/MedusaProductCard.tsx',
     'src/components/MedusaCart.tsx',
     'src/components/CartButton.tsx',
+    'src/components/ErrorBoundary.tsx',
+    'src/components/NotificationSystem.tsx',
+    'src/components/LoadingStates.tsx',
     'src/pages/checkout.tsx',
     'src/pages/order-confirmation.tsx',
     'src/utils/priceUtils.ts'
@@ -235,7 +238,7 @@ function checkTypeScript() {
  */
 function checkSnipcartRemnants() {
   logInfo('Checking for Snipcart remnants...');
-  
+
   const filesToCheck = [
     'src/components/Layout.tsx',
     'gatsby-config.js',
@@ -248,7 +251,7 @@ function checkSnipcartRemnants() {
     const filePath = path.join(process.cwd(), file);
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       if (content.includes('snipcart') || content.includes('Snipcart')) {
         logWarning(`${file} still contains Snipcart references`);
         foundRemnants = true;
@@ -259,6 +262,80 @@ function checkSnipcartRemnants() {
   }
 
   return !foundRemnants;
+}
+
+/**
+ * Check code quality improvements
+ */
+function checkCodeQuality() {
+  logInfo('Checking code quality improvements...');
+
+  let qualityScore = 0;
+  const checks = [];
+
+  // Check for error boundaries
+  const layoutPath = path.join(process.cwd(), 'src/components/Layout.tsx');
+  if (fs.existsSync(layoutPath)) {
+    const content = fs.readFileSync(layoutPath, 'utf8');
+    if (content.includes('ErrorBoundary')) {
+      logSuccess('Error boundaries implemented');
+      qualityScore++;
+    } else {
+      logWarning('Error boundaries not found in Layout');
+    }
+    checks.push('Error Boundaries');
+  }
+
+  // Check for notification system
+  const notificationPath = path.join(process.cwd(), 'src/components/NotificationSystem.tsx');
+  if (fs.existsSync(notificationPath)) {
+    logSuccess('Notification system implemented');
+    qualityScore++;
+  } else {
+    logWarning('Notification system not found');
+  }
+  checks.push('Notification System');
+
+  // Check for loading states
+  const loadingPath = path.join(process.cwd(), 'src/components/LoadingStates.tsx');
+  if (fs.existsSync(loadingPath)) {
+    logSuccess('Loading states system implemented');
+    qualityScore++;
+  } else {
+    logWarning('Loading states system not found');
+  }
+  checks.push('Loading States');
+
+  // Check for improved translations
+  const enCommonPath = path.join(process.cwd(), 'src/locales/en/common.json');
+  if (fs.existsSync(enCommonPath)) {
+    const content = JSON.parse(fs.readFileSync(enCommonPath, 'utf8'));
+    if (content.errors && content.errors.boundary) {
+      logSuccess('Enhanced translations with error handling');
+      qualityScore++;
+    } else {
+      logWarning('Enhanced translations not found');
+    }
+  }
+  checks.push('Enhanced Translations');
+
+  // Check for accessibility improvements
+  const productCardPath = path.join(process.cwd(), 'src/components/MedusaProductCard.tsx');
+  if (fs.existsSync(productCardPath)) {
+    const content = fs.readFileSync(productCardPath, 'utf8');
+    if (content.includes('aria-label') && content.includes('role=')) {
+      logSuccess('Accessibility improvements implemented');
+      qualityScore++;
+    } else {
+      logWarning('Accessibility improvements not found');
+    }
+  }
+  checks.push('Accessibility');
+
+  const percentage = Math.round((qualityScore / checks.length) * 100);
+  logInfo(`Code quality score: ${qualityScore}/${checks.length} (${percentage}%)`);
+
+  return percentage >= 80; // 80% or higher is considered good
 }
 
 /**
@@ -306,7 +383,8 @@ function runTests() {
     'Environment Configuration': checkEnvironment(),
     'Package Dependencies': checkDependencies(),
     'TypeScript Configuration': checkTypeScript(),
-    'Snipcart Cleanup': checkSnipcartRemnants()
+    'Snipcart Cleanup': checkSnipcartRemnants(),
+    'Code Quality': checkCodeQuality()
   };
 
   console.log('\n');
