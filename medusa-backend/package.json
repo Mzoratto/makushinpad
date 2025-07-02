@@ -1,7 +1,7 @@
 {
   "name": "shin-shop-backend",
-  "version": "1.0.0",
-  "description": "Medusa.js backend for The Shin Shop - Custom shin pad e-commerce",
+  "version": "1.0.1",
+  "description": "Medusa.js backend for The Shin Shop - Custom shin pad e-commerce (Railway deployment fixed)",
   "author": "The Shin Shop",
   "license": "MIT",
   "keywords": [
