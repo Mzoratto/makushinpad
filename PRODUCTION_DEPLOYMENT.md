@@ -25,10 +25,10 @@ npm run start
 ```
 
 **Recommended Hosting:**
-- **Railway** (recommended): Easy Medusa deployment
-- **Heroku**: Good for small-medium scale
+- **Railway** (CHOSEN): All-in-one Medusa deployment with managed PostgreSQL
+- **Supabase + Railway**: Alternative with separate database (see SUPABASE_RAILWAY_DEPLOYMENT.md)
+- **Heroku**: Alternative option
 - **DigitalOcean**: More control and customization
-- **AWS/GCP**: Enterprise-level scaling
 
 #### **2. Environment Variables**
 Update your production environment variables:
