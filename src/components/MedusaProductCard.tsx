@@ -301,7 +301,7 @@ const MedusaProductCard: React.FC<MedusaProductCardProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 };
 
