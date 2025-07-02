@@ -1,7 +1,7 @@
 {
-  "name": "shin-shop-backend",
-  "version": "1.0.1",
-  "description": "Medusa.js backend for The Shin Shop - Custom shin pad e-commerce (Railway deployment fixed)",
+  "name": "shin-shop-backend-clean",
+  "version": "2.0.0",
+  "description": "Medusa.js backend for The Shin Shop - Clean deployment without mollie plugin",
   "author": "The Shin Shop",
   "license": "MIT",
   "keywords": [
@@ -26,7 +26,9 @@
     "test:mollie": "node test-mollie-integration.js",
     "products:manage": "node manage-products.js",
     "products:seed-enhanced": "node seed-enhanced-products.js",
-    "products:seed-enhanced-run": "npm run products:seed-enhanced && npm run seed -- -f ./data/seed-enhanced.json"
+    "products:seed-enhanced-run": "npm run products:seed-enhanced && npm run seed -- -f ./data/seed-enhanced.json",
+    "verify": "node verify-install.js",
+    "postinstall": "npm run verify"
   },
   "dependencies": {
     "@medusajs/admin": "^7.1.14",
