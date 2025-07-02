@@ -3,6 +3,7 @@ import { PageProps } from "gatsby";
 import { useI18next, useTranslation } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
 import MedusaProductCard from "../components/MedusaProductCard";
+import { LoadingCards, LoadingInline } from "../components/LoadingStates";
 import { Helmet } from "react-helmet";
 import { useCurrency } from "../contexts/CurrencyContext";
 import medusaClient, { MedusaProduct } from "../services/medusaClient";
@@ -71,11 +72,9 @@ const ProductsPage: React.FC<ProductsPageProps> = () => {
         </p>
       </div>
 
+      <div>
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <span className="ml-3 text-lg">{t('common:status.loading')}</span>
-          </div>
+          <LoadingCards count={6} />
         ) : error ? (
           <div className="text-center py-12">
             <div className="text-red-600 mb-4">
