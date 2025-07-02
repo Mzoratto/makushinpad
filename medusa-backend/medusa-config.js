@@ -42,18 +42,22 @@ const plugins = [
       upload_dir: "uploads",
     },
   },
-  {
+];
+
+// Only add admin plugin in development
+if (process.env.NODE_ENV !== "production") {
+  plugins.push({
     resolve: "@medusajs/admin",
     /** @type {import('@medusajs/admin').PluginOptions} */
     options: {
       autoRebuild: false,
-      serve: process.env.NODE_ENV === "development",
+      serve: true,
       develop: {
         open: false,
       },
     },
-  },
-];
+  });
+}
 
 // Mollie payment integration will be handled via custom API endpoints
 // The medusa-payment-mollie package doesn't exist in npm registry

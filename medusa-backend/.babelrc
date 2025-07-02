@@ -1,6 +1,7 @@
 {
   "presets": [
-    "babel-preset-medusa-package"
+    ["@babel/preset-env", { "node": "current" }],
+    "@babel/preset-typescript"
   ],
   "plugins": []
 }
