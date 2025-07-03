@@ -56,6 +56,9 @@
     "cross-env": "^7.0.3",
     "rimraf": "^3.0.2"
   },
+  "overrides": {
+    "@medusajs/types": "1.8.10"
+  },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
