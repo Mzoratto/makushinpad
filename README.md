@@ -25,14 +25,14 @@ A modern e-commerce website for customizable shin pads built with Gatsby.js and 
 - **State Management**: React Context API
 
 ### Backend
-- **E-commerce**: Medusa.js (headless commerce platform)
-- **Database**: PostgreSQL
-- **Payments**: Mollie (CZK/EUR support)
-- **Email**: Nodemailer with Gmail/SMTP
+- **E-commerce**: Supabase (serverless backend platform)
+- **Database**: PostgreSQL (Supabase)
+- **Payments**: Stripe/Mollie (CZK/EUR support)
+- **Email**: Supabase Edge Functions with email providers
 
 ### Deployment
 - **Frontend**: Netlify (https://makushinpadshop.netlify.app/)
-- **Backend**: Render (Medusa.js API)
+- **Backend**: Supabase (serverless functions and database)
 - **Content**: Markdown files for products
 
 ## 📋 Prerequisites
@@ -120,7 +120,7 @@ src/locales/
 ```
 shinshop/
 ├── 📂 src/                     # Gatsby frontend source
-├── 📂 medusa-backend/          # Medusa.js backend
+├── 📂 supabase/                # Supabase backend configuration
 ├── 📂 docs/                    # Organized documentation
 │   ├── setup/                 # Setup guides
 │   ├── guides/                # Usage guides
@@ -135,7 +135,7 @@ shinshop/
 
 ## 🔄 Migration Status
 
-This project has been **migrated from Snipcart to Medusa.js** for better control and cost savings.
+This project has been **migrated from Snipcart to Supabase** for better control, scalability, and cost savings.
 
 ### ✅ Completed
 - **E-commerce Platform**: Snipcart → Medusa.js
@@ -218,10 +218,10 @@ shin-shop/
 │   ├── 📂 pages/              # Gatsby pages
 │   ├── 📂 services/           # API services
 │   └── 📂 utils/              # Utility functions
-├── 📂 medusa-backend/         # Medusa.js backend
-│   ├── 📂 src/                # Backend source code
-│   ├── 📂 data/               # Seed data
-│   └── 📄 render.yaml         # Render deployment config
+├── 📂 supabase/               # Supabase backend
+│   ├── 📂 functions/          # Edge functions
+│   ├── 📂 migrations/         # Database migrations
+│   └── 📄 config.toml         # Supabase configuration
 ├── 📂 docs/                   # Documentation
 ├── 📂 deployment/             # Deployment scripts
 ├── 📂 archive/                # Archived files

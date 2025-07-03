@@ -15,7 +15,8 @@ build:
   # Environment variables (set these in Gatsby Cloud dashboard)
   environment:
     NODE_ENV: "production"
-    GATSBY_SNIPCART_API_KEY: "$GATSBY_SNIPCART_API_KEY"
+    GATSBY_SUPABASE_URL: "$GATSBY_SUPABASE_URL"
+    GATSBY_SUPABASE_ANON_KEY: "$GATSBY_SUPABASE_ANON_KEY"
     GATSBY_SITE_URL: "$GATSBY_SITE_URL"
 
 # Performance Optimizations
@@ -37,7 +38,8 @@ preview:
   # Preview environment variables
   environment:
     NODE_ENV: "development"
-    GATSBY_SNIPCART_API_KEY: "$GATSBY_SNIPCART_TEST_API_KEY"
+    GATSBY_SUPABASE_URL: "$GATSBY_SUPABASE_URL"
+    GATSBY_SUPABASE_ANON_KEY: "$GATSBY_SUPABASE_ANON_KEY"
 
 # Redirects and Headers
 redirects:
@@ -59,7 +61,7 @@ headers:
       X-Content-Type-Options: "nosniff"
       Referrer-Policy: "strict-origin-when-cross-origin"
       
-  # Snipcart specific headers
+  # Supabase specific headers
   - for: "/*"
     values:
-      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.snipcart.com; style-src 'self' 'unsafe-inline' https://cdn.snipcart.com; img-src 'self' data: https:; connect-src 'self' https://app.snipcart.com;"
+      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://js.stripe.com;"

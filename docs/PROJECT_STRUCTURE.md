@@ -64,24 +64,22 @@ src/
     └── (image files)
 ```
 
-## 🛒 Backend Structure (`medusa-backend/`)
+## 🛒 Backend Structure (`supabase/`)
 
 ```
-medusa-backend/
-├── 📂 src/                    # Medusa.js source code
-│   ├── 📂 api/               # Custom API routes
-│   │   └── 📂 routes/        # Route handlers
-│   │       └── 📂 webhooks/  # Webhook endpoints
-│   ├── 📂 services/          # Custom services
-│   │   └── email.ts          # Email notification service
-│   └── 📂 subscribers/       # Event subscribers
-│       └── order-notification.ts # Order email notifications
-├── 📂 data/                  # Seed and configuration data
-│   ├── seed.json             # Basic seed data
-│   ├── seed-enhanced.json    # Enhanced product catalog
-│   └── enhanced-shin-pad-catalog.json # Product definitions
-├── 📄 package.json           # Backend dependencies
-├── 📄 medusa-config.js       # Medusa configuration
+supabase/
+├── 📂 functions/              # Supabase Edge Functions
+│   ├── 📂 products/          # Product management functions
+│   ├── 📂 orders/            # Order management functions
+│   ├── 📂 payments/          # Payment processing functions
+│   └── 📂 admin/             # Admin functions
+├── 📂 migrations/            # Database migrations
+│   ├── 001_initial_schema.sql # Initial database schema
+│   ├── 002_products.sql      # Product tables
+│   └── 003_orders.sql        # Order tables
+├── 📂 seed/                  # Seed data
+│   └── products.sql          # Product seed data
+├── 📄 config.toml            # Supabase configuration
 ├── 📄 tsconfig.json          # TypeScript configuration
 ├── 📄 index.js               # Server entry point
 ├── 📄 setup.sh               # Automated setup script
