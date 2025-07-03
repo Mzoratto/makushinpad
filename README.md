@@ -31,8 +31,8 @@ A modern e-commerce website for customizable shin pads built with Gatsby.js and 
 - **Email**: Nodemailer with Gmail/SMTP
 
 ### Deployment
-- **Frontend**: Netlify
-- **Backend**: Railway/Heroku
+- **Frontend**: Netlify (https://makushinpadshop.netlify.app/)
+- **Backend**: Render (Medusa.js API)
 - **Content**: Markdown files for products
 
 ## 📋 Prerequisites
@@ -179,19 +179,61 @@ The site can be deployed to any static hosting service:
 
 ### Environment Variables
 
+**Frontend (.env):**
 ```bash
-# Snipcart
-GATSBY_SNIPCART_API_KEY=your_snipcart_public_key
+# Medusa API
+GATSBY_MEDUSA_API_URL=https://your-backend-url.render.com
 
 # Site URL
-GATSBY_SITE_URL=https://your-domain.com
+GATSBY_SITE_URL=https://makushinpadshop.netlify.app
+```
+
+**Backend (medusa-backend/.env):**
+```bash
+# Database
+DATABASE_URL=postgresql://user:password@host:port/database
+
+# Security
+JWT_SECRET=your-jwt-secret
+COOKIE_SECRET=your-cookie-secret
+
+# CORS
+STORE_CORS=https://makushinpadshop.netlify.app
+ADMIN_CORS=http://localhost:7001
+
+# Email (optional)
+EMAIL_PROVIDER=gmail
+GMAIL_USER=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-app-password
+BUSINESS_EMAIL=your-business@email.com
+```
+
+## 📁 Project Structure
+
+```
+shin-shop/
+├── 📂 src/                    # Frontend source code
+│   ├── 📂 components/         # React components
+│   ├── 📂 contexts/           # React Context providers
+│   ├── 📂 pages/              # Gatsby pages
+│   ├── 📂 services/           # API services
+│   └── 📂 utils/              # Utility functions
+├── 📂 medusa-backend/         # Medusa.js backend
+│   ├── 📂 src/                # Backend source code
+│   ├── 📂 data/               # Seed data
+│   └── 📄 render.yaml         # Render deployment config
+├── 📂 docs/                   # Documentation
+├── 📂 deployment/             # Deployment scripts
+├── 📂 archive/                # Archived files
+└── 📄 netlify.toml           # Netlify deployment config
 ```
 
 ## 🔒 Security
 
 - Regular dependency audits with `npm audit`
 - Security overrides for vulnerable packages
-- Secure payment processing via Snipcart/Stripe
+- Secure payment processing via Mollie
+- Environment variable protection
 
 ## 🤝 Contributing
 
