@@ -13,7 +13,7 @@
   "scripts": {
     "clean": "./node_modules/.bin/rimraf dist",
     "build": "NODE_ENV=production npm run build:prod",
-    "build:prod": "npm run clean && tsc -p tsconfig.json --noEmitOnError false",
+    "build:prod": "npm run clean && tsc -p tsconfig.json --skipLibCheck",
     "build:server": "cross-env npm run clean && tsc -p tsconfig.json",
     "build:admin": "cross-env medusa-admin build --skip-build",
     "build:full": "cross-env npm run clean && npm run build:server && npm run build:admin",
