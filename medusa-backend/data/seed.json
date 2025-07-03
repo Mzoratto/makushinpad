@@ -16,7 +16,7 @@
       "name": "Czech Republic",
       "currency_code": "czk",
       "tax_rate": 21,
-      "payment_providers": ["manual", "mollie"],
+      "payment_providers": ["manual"],
       "fulfillment_providers": ["manual"],
       "countries": ["cz"]
     },
@@ -24,7 +24,7 @@
       "name": "Europe",
       "currency_code": "eur", 
       "tax_rate": 20,
-      "payment_providers": ["manual", "mollie"],
+      "payment_providers": ["manual"],
       "fulfillment_providers": ["manual"],
       "countries": ["sk", "de", "at"]
     }
