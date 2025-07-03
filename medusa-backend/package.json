@@ -53,7 +53,8 @@
     "prism": "^4.1.2",
     "typeorm": "^0.3.16",
     "cross-env": "^7.0.3",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
