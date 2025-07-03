@@ -95,6 +95,8 @@ const projectConfig = {
   cookieSecret: process.env.COOKIE_SECRET || "supersecret",
   store_cors: STORE_CORS,
   database_url: DATABASE_URL,
+  database_type: "sqlite",
+  database_database: "./medusa-store.db",
   admin_cors: ADMIN_CORS,
   // Server configuration for Render deployment
   http: {
