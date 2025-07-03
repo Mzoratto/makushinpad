@@ -12,5 +12,8 @@ services:
         value: "0.0.0.0"
       - key: PORT
         value: "10000"
-      - key: DATABASE_URL
-        value: "sqlite://medusa-store.db"
+
+databases:
+  - name: shin-shop-db
+    databaseName: medusa
+    user: medusa
