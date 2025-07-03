@@ -13,4 +13,4 @@ services:
       - key: PORT
         value: "10000"
       - key: DATABASE_URL
-        value: "postgres://medusa_user:medusa_password@dpg-ctqhj8lds78s73e5qlr0-a.oregon-postgres.render.com/medusa_db"
+        value: "postgres://testuser:testpass@localhost:5432/testdb"
