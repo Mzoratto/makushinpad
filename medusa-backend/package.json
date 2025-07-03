@@ -13,7 +13,7 @@
   "scripts": {
     "clean": "./node_modules/.bin/rimraf dist",
     "build": "NODE_ENV=production npm run build:prod",
-    "build:prod": "npm run clean && echo 'Copying source files directly...' && cp -r src dist && echo 'Renaming .ts files to .js...' && find dist -name '*.ts' -exec sh -c 'mv \"$1\" \"${1%.ts}.js\"' _ {} \\;",
+    "build:prod": "npm run clean && tsc -p tsconfig.json --noEmitOnError false --maxNodeModuleJsDepth 0",
     "build:server": "cross-env npm run clean && tsc -p tsconfig.json",
     "build:admin": "cross-env medusa-admin build --skip-build",
     "build:full": "cross-env npm run clean && npm run build:server && npm run build:admin",
