@@ -13,12 +13,4 @@ services:
       - key: PORT
         value: "10000"
       - key: DATABASE_URL
-        fromDatabase:
-          name: shin-shop-db
-          property: connectionString
-
-databases:
-  - name: shin-shop-db
-    databaseName: medusa
-    user: medusa
-    plan: starter
+        value: "postgres://medusa_user:medusa_password@dpg-ctqhj8lds78s73e5qlr0-a.oregon-postgres.render.com/medusa_db"
