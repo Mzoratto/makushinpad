@@ -1,5 +1,7 @@
 import React from 'react';
-import { useI18next } from 'gatsby-plugin-react-i18next';
+// Temporary fallback for Phase 1
+// import { useI18next } from 'gatsby-plugin-react-i18next';
+import { useI18next, useTranslation } from '../utils/i18nFallback';
 import { navigate } from 'gatsby';
 
 const LanguageSwitcher: React.FC = () => {

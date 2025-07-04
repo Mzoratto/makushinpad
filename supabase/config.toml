@@ -33,9 +33,6 @@ api_url = "http://localhost:54321"
 enabled = true
 # Port to use for the email testing server web interface.
 port = 54324
-# Uncomment to expose additional ports for testing user applications that send emails.
-# smtp_port = 54325
-# pop3_port = 54326
 
 [storage]
 enabled = true
@@ -67,32 +64,11 @@ double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
 
-# Uncomment to customize email template
-# [auth.email.template.invite]
-# subject = "You have been invited"
-# content_path = "./supabase/templates/invite.html"
-
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
 enable_signup = true
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = false
-
-# Use pre-defined map of phone number to OTP for testing.
-# [auth.sms.test_otp]
-# 4152127777 = "123456"
-
-# Configure one of the supported SMS providers: `twilio`, `messagebird`, `textlocal`, `vonage`.
-# [auth.sms.twilio]
-# account_sid = ""
-# message_service_sid = ""
-# auth_token = ""
-
-[edge_functions]
-enabled = true
-# Configure one of the supported request policies: `oneshot`, `per_worker`.
-# Use `oneshot` for hot-reloading, or `per_worker` for load testing.
-request_policy = "oneshot"
 
 [analytics]
 enabled = false

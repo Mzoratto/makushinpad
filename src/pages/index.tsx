@@ -150,16 +150,7 @@ const IndexPage: React.FC<IndexPageProps> = ({ data }) => {
 };
 
 export const query = graphql`
-  query ($language: String!) {
-    locales: allLocale(filter: {language: {eq: $language}}) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query {
     featured: allMarkdownRemark(
       filter: { frontmatter: { featured: { eq: true } } }
       limit: 6

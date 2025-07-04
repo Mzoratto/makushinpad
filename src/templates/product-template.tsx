@@ -160,16 +160,7 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({ data }) => {
 };
 
 export const query = graphql`
-  query ProductQuery($id: String!, $language: String!) {
-    locales: allLocale(filter: {language: {eq: $language}}) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
+  query ProductQuery($id: String!) {
     markdownRemark(id: { eq: $id }) {
       html
       frontmatter {

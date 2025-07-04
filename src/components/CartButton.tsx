@@ -1,12 +1,12 @@
 /**
- * Cart Button Component for Medusa.js
- * Replaces Snipcart cart button with Medusa cart functionality
+ * Cart Button Component for Supabase
+ * Displays cart button with item count and opens cart sidebar
  */
 
 import React, { useState } from 'react';
 import { useTranslation } from 'gatsby-plugin-react-i18next';
 import { useCart } from '../contexts/CartContext';
-import MedusaCart from './MedusaCart';
+import CartSidebar from './CartSidebar';
 
 const CartButton: React.FC = () => {
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ const CartButton: React.FC = () => {
       </button>
 
       {/* Cart Sidebar */}
-      <MedusaCart isOpen={isCartOpen} onClose={handleCartClose} />
+      <CartSidebar isOpen={isCartOpen} onClose={handleCartClose} />
     </>
   );
 };

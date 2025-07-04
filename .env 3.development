@@ -1,0 +1,17 @@
+# Development Environment Configuration
+# Supabase Configuration (Replace with your actual values)
+GATSBY_SUPABASE_URL=https://nxrkpzaeqgtttqzzyuhf.supabase.co
+GATSBY_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54cmtwemFlcWd0dHRxenp5dWhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU5MDI2NzQsImV4cCI6MjA1MTQ3ODY3NH0.Hs4Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8Ej8
+
+# Site Configuration
+GATSBY_SITE_URL=http://localhost:8000
+
+# Optional: Enable debug mode
+GATSBY_DEBUG_MODE=true
+
+# Currency Configuration
+GATSBY_DEFAULT_CURRENCY=CZK
+GATSBY_SUPPORTED_CURRENCIES=CZK,EUR
+
+# Image Upload Configuration
+GATSBY_MAX_UPLOAD_SIZE=52428800

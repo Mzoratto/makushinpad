@@ -1,22 +1,22 @@
 /**
- * Cart Context for Medusa.js Integration
+ * Cart Context for Supabase Integration
  * This context manages cart state and provides cart operations throughout the app
  */
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import medusaClient, { MedusaCart, MedusaLineItem } from '../services/medusaClient';
+import { CartService, Cart, CartItem } from '../services/supabaseClient';
 
 interface CartContextType {
-  cart: MedusaCart | null;
+  cart: Cart | null;
   itemCount: number;
   isLoading: boolean;
   error: string | null;
-  addToCart: (variantId: string, quantity?: number, metadata?: Record<string, any>) => Promise<void>;
-  updateCartItem: (lineItemId: string, quantity: number) => Promise<void>;
-  removeFromCart: (lineItemId: string) => Promise<void>;
+  addToCart: (variantId: string, quantity?: number) => Promise<void>;
+  updateCartItem: (itemId: string, quantity: number) => Promise<void>;
+  removeFromCart: (itemId: string) => Promise<void>;
   clearCart: () => void;
   refreshCart: () => Promise<void>;
-  completeCart: () => Promise<any>;
+  getCartTotal: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -26,17 +26,26 @@ interface CartProviderProps {
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-  const [cart, setCart] = useState<MedusaCart | null>(null);
+  const [cart, setCart] = useState<Cart | null>(null);
   const [itemCount, setItemCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [cartId, setCartId] = useState<string | null>(null);
 
   /**
    * Calculate item count from cart
    */
-  const calculateItemCount = (cartData: MedusaCart | null): number => {
+  const calculateItemCount = (cartData: Cart | null): number => {
     if (!cartData || !cartData.items) return 0;
     return cartData.items.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  /**
+   * Calculate cart total
+   */
+  const getCartTotal = (): number => {
+    if (!cart || !cart.items) return 0;
+    return cart.items.reduce((total, item) => total + (item.unit_price * item.quantity), 0);
   };
 
   /**
@@ -54,15 +63,34 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, [cart]);
 
   /**
-   * Load cart from Medusa backend
+   * Load or create cart
    */
   const loadCart = async (): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const { cart: cartData } = await medusaClient.getCart();
-      setCart(cartData);
+
+      // Get cart ID from localStorage or create new
+      const storedCartId = localStorage.getItem('cart_id');
+
+      let loadedCart: Cart;
+      if (storedCartId) {
+        try {
+          loadedCart = await CartService.getCart(storedCartId);
+          setCartId(storedCartId);
+        } catch (err) {
+          // Cart not found, create new one
+          loadedCart = await CartService.getCart();
+          setCartId(loadedCart.id);
+          localStorage.setItem('cart_id', loadedCart.id);
+        }
+      } else {
+        loadedCart = await CartService.getCart();
+        setCartId(loadedCart.id);
+        localStorage.setItem('cart_id', loadedCart.id);
+      }
+
+      setCart(loadedCart);
     } catch (err) {
       console.error('Failed to load cart:', err);
       setError(err instanceof Error ? err.message : 'Failed to load cart');
@@ -75,23 +103,29 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
    * Add item to cart
    */
   const addToCart = async (
-    variantId: string, 
-    quantity: number = 1, 
-    metadata?: Record<string, any>
+    variantId: string,
+    quantity: number = 1
   ): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const { cart: updatedCart } = await medusaClient.addToCart(variantId, quantity, metadata);
-      setCart(updatedCart);
-      
-      // Show success message (you can customize this)
+      const result = await CartService.addToCart(cartId || undefined, variantId, quantity);
+
+      // Update cart ID if it was created
+      if (!cartId) {
+        setCartId(result.cart_id);
+        localStorage.setItem('cart_id', result.cart_id);
+      }
+
+      // Refresh cart to get updated state
+      await refreshCart();
+
       console.log('Item added to cart successfully');
     } catch (err) {
       console.error('Failed to add item to cart:', err);
       setError(err instanceof Error ? err.message : 'Failed to add item to cart');
-      throw err; // Re-throw so components can handle it
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -100,13 +134,15 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   /**
    * Update cart item quantity
    */
-  const updateCartItem = async (lineItemId: string, quantity: number): Promise<void> => {
+  const updateCartItem = async (itemId: string, quantity: number): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const { cart: updatedCart } = await medusaClient.updateCartItem(lineItemId, quantity);
-      setCart(updatedCart);
+      if (!cartId) throw new Error('No cart available');
+
+      await CartService.updateCartItem(cartId, itemId, quantity);
+      await refreshCart();
     } catch (err) {
       console.error('Failed to update cart item:', err);
       setError(err instanceof Error ? err.message : 'Failed to update cart item');
@@ -119,13 +155,15 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   /**
    * Remove item from cart
    */
-  const removeFromCart = async (lineItemId: string): Promise<void> => {
+  const removeFromCart = async (itemId: string): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const { cart: updatedCart } = await medusaClient.removeFromCart(lineItemId);
-      setCart(updatedCart);
+      if (!cartId) throw new Error('No cart available');
+
+      await CartService.removeFromCart(cartId, itemId);
+      await refreshCart();
     } catch (err) {
       console.error('Failed to remove item from cart:', err);
       setError(err instanceof Error ? err.message : 'Failed to remove item from cart');
@@ -139,8 +177,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
    * Clear cart
    */
   const clearCart = (): void => {
-    medusaClient.clearCart();
+    localStorage.removeItem('cart_id');
     setCart(null);
+    setCartId(null);
     setItemCount(0);
   };
 
@@ -148,30 +187,15 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
    * Refresh cart data
    */
   const refreshCart = async (): Promise<void> => {
-    await loadCart();
-  };
+    if (!cartId) return;
 
-  /**
-   * Complete cart and create order
-   */
-  const completeCart = async (): Promise<any> => {
     try {
-      setIsLoading(true);
-      setError(null);
-
-      const result = await medusaClient.completeCart();
-      
-      // Clear cart state after successful order
-      setCart(null);
-      setItemCount(0);
-      
-      return result;
+      const updatedCart = await CartService.getCart(cartId);
+      setCart(updatedCart);
     } catch (err) {
-      console.error('Failed to complete cart:', err);
-      setError(err instanceof Error ? err.message : 'Failed to complete order');
-      throw err;
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to refresh cart:', err);
+      // If cart not found, clear local state
+      clearCart();
     }
   };
 
@@ -185,7 +209,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     removeFromCart,
     clearCart,
     refreshCart,
-    completeCart,
+    getCartTotal,
   };
 
   return (

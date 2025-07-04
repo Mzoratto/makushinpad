@@ -33,19 +33,20 @@ const NotFoundPage: React.FC<PageProps> = () => {
   );
 };
 
-export const query = graphql`
-  query ($language: String!) {
-    locales: allLocale(filter: {language: {eq: $language}}) {
-      edges {
-        node {
-          ns
-          data
-          language
-        }
-      }
-    }
-  }
-`;
+// GraphQL query temporarily removed for Phase 1
+// export const query = graphql`
+//   query ($language: String!) {
+//     locales: allLocale(filter: {language: {eq: $language}}) {
+//       edges {
+//         node {
+//           ns
+//           data
+//           language
+//         }
+//       }
+//     }
+//   }
+// `;
 
 export default NotFoundPage;
 

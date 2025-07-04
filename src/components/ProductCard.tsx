@@ -2,72 +2,71 @@ import React from "react";
 import { Link } from "gatsby-plugin-react-i18next";
 import { useCurrency } from "../contexts/CurrencyContext";
 import { getProductPrice, formatPrice } from "../utils/priceUtils";
-
-interface Size {
-  name: string;
-  code: string;
-  price: number;
-}
+import { Product, ProductVariant } from "../services/supabaseClient";
 
 interface ProductCardProps {
-  id: string;
-  slug: string;
-  title: string;
-  price: number; // This will be defaultPrice (legacy)
-  sizes?: Size[]; // Optional sizes array
-  description: string;
-  image: string;
+  product: Product;
+  showAddToCart?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  id,
-  slug,
-  title,
-  price,
-  sizes,
-  description,
-  image,
+  product,
+  showAddToCart = false,
 }) => {
   const { currency } = useCurrency();
 
-  // Calculate the display price based on current currency
-  const getDisplayPrice = (): { price: number; showFrom: boolean } => {
-    if (sizes && sizes.length > 0) {
-      // Use the first size price and check if we should show "From"
-      const firstSizePrice = getProductPrice(id, 'S', currency, 'main');
-      const hasMultiplePrices = sizes.length > 1 &&
-        sizes.some(size => getProductPrice(id, size.code as 'S' | 'M', currency, 'main') !== firstSizePrice);
-
-      return {
-        price: firstSizePrice,
-        showFrom: hasMultiplePrices
-      };
-    } else {
-      // Fallback to legacy price conversion
-      return {
-        price: getProductPrice(id, 'S', currency, 'main'),
-        showFrom: false
-      };
+  // Get the price range from variants
+  const getPriceRange = (): { minPrice: number; maxPrice: number; showFrom: boolean } => {
+    if (!product.variants || product.variants.length === 0) {
+      return { minPrice: 0, maxPrice: 0, showFrom: false };
     }
+
+    const prices = product.variants.map(variant => variant.price);
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    return {
+      minPrice,
+      maxPrice,
+      showFrom: minPrice !== maxPrice
+    };
   };
 
-  const { price: displayPrice, showFrom } = getDisplayPrice();
+  const { minPrice, showFrom } = getPriceRange();
+
+  // Convert CZK to EUR if needed (25 CZK = 1 EUR)
+  const displayPrice = currency === 'EUR' ? Math.round(minPrice / 25) : minPrice;
+  const currencySymbol = currency === 'EUR' ? '€' : 'Kč';
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1">
-      <div className="h-64 overflow-hidden">
-        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+      <div className="h-64 overflow-hidden relative">
+        {product.images && product.images.length > 0 ? (
+          <img
+            src={product.images[0].url}
+            alt={product.images[0].alt || product.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Fallback to placeholder on image error
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const placeholder = target.parentElement?.querySelector('.image-placeholder') as HTMLElement;
+              if (placeholder) placeholder.style.display = 'flex';
+            }}
+          />
+        ) : null}
+        <div className="image-placeholder absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center" style={{ display: product.images && product.images.length > 0 ? 'none' : 'flex' }}>
           <span className="text-gray-500">Image Placeholder</span>
         </div>
       </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{description}</p>
+        <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
         <div className="flex justify-between items-center">
           <span className="text-primary font-bold">
-            {showFrom ? 'From ' : ''}{formatPrice(displayPrice, currency)}
+            {showFrom ? 'From ' : ''}{displayPrice} {currencySymbol}
           </span>
           <Link
-            to={`/products/${slug}`}
+            to={`/products/${product.handle}`}
             className="btn btn-primary text-sm py-1"
           >
             View Details

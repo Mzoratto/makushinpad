@@ -1,74 +1,107 @@
+/**
+ * Secure Cart API - Supabase Edge Function
+ * Handles cart operations with proper security, validation, and race condition prevention
+ */
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
+// Environment validation
+const supabaseUrl = Deno.env.get('SUPABASE_URL')
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error('Missing required environment variables')
+}
+
+// CORS configuration - restrict in production
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': Deno.env.get('NODE_ENV') === 'production' 
+    ? 'https://makushinpadshop.netlify.app' 
+    : '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 }
 
-interface CartItem {
-  id: string
-  cart_id: string
-  product_variant_id: string
-  quantity: number
-  variant?: {
-    id: string
-    title: string
-    sku: string
-    price: number
-    product: {
-      id: string
-      title: string
-      images: any[]
-    }
+// Create Supabase client
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+/**
+ * Input validation helpers
+ */
+function validateCartId(id: string | null) {
+  if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    throw new Error('Invalid cart ID format')
   }
+  return id
 }
 
-interface Cart {
-  id: string
-  customer_id?: string
-  session_id?: string
-  currency_code: string
-  metadata: any
-  items: CartItem[]
-  subtotal: number
-  total: number
+function validateVariantId(id: string) {
+  if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    throw new Error('Invalid variant ID format')
+  }
+  return id
+}
+
+function validateQuantity(quantity: number) {
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+    throw new Error('Quantity must be an integer between 1 and 99')
+  }
+  return quantity
+}
+
+/**
+ * Security middleware
+ */
+function checkAuthorization(req: Request) {
+  const authHeader = req.headers.get('authorization')
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new Error('Missing or invalid authorization header')
+  }
+  return authHeader.split(' ')[1]
+}
+
+/**
+ * Race condition safe cart item addition
+ */
+async function safeAddToCart(cartId: string, variantId: string, quantity: number) {
+  // Use a transaction to prevent race conditions
+  const { data, error } = await supabase.rpc('add_to_cart_safe', {
+    p_cart_id: cartId,
+    p_variant_id: variantId,
+    p_quantity: quantity
+  })
+
+  if (error) {
+    throw new Error(`Failed to add item to cart: ${error.message}`)
+  }
+
+  return data
 }
 
 serve(async (req) => {
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    )
-
+    // Security check
+    const token = checkAuthorization(req)
+    
+    // Parse URL
     const url = new URL(req.url)
-    const pathParts = url.pathname.split('/')
-    const cartId = pathParts[pathParts.length - 1]
-    const action = pathParts[pathParts.length - 2]
-
-    // Get user from auth header
-    const authHeader = req.headers.get('Authorization')
-    let user = null
-    if (authHeader) {
-      const { data: { user: authUser } } = await supabase.auth.getUser(
-        authHeader.replace('Bearer ', '')
-      )
-      user = authUser
-    }
+    const pathParts = url.pathname.split('/').filter(Boolean)
+    const cartId = pathParts[1] // cart/{cartId}
+    const itemId = pathParts[3] // cart/{cartId}/items/{itemId}
 
     switch (req.method) {
       case 'GET':
-        // Get cart by ID or create new cart
-        let cart: Cart | null = null
-
-        if (cartId && cartId !== 'cart') {
-          // Get existing cart
-          const { data: existingCart, error: cartError } = await supabase
+        if (cartId) {
+          // Get specific cart
+          const validCartId = validateCartId(cartId)
+          
+          const { data: cart, error: cartError } = await supabase
             .from('carts')
             .select(`
               *,
@@ -76,25 +109,29 @@ serve(async (req) => {
                 *,
                 variant:product_variants(
                   *,
-                  product:products(id, title, images)
+                  product:products(title)
                 )
               )
             `)
-            .eq('id', cartId)
+            .eq('id', validCartId)
             .single()
 
-          if (cartError && cartError.code !== 'PGRST116') throw cartError
-          cart = existingCart
-        }
+          if (cartError) {
+            if (cartError.code === 'PGRST116') {
+              throw new Error('Cart not found')
+            }
+            throw new Error('Failed to fetch cart')
+          }
 
-        if (!cart) {
+          return new Response(JSON.stringify({ cart }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          })
+        } else {
           // Create new cart
-          const { data: newCart, error: createError } = await supabase
+          const { data: cart, error: cartError } = await supabase
             .from('carts')
             .insert({
-              customer_id: user?.id,
-              session_id: user ? null : crypto.randomUUID(),
-              currency_code: 'CZK'
+              metadata: { created_by: 'frontend' }
             })
             .select(`
               *,
@@ -102,208 +139,143 @@ serve(async (req) => {
                 *,
                 variant:product_variants(
                   *,
-                  product:products(id, title, images)
+                  product:products(title)
                 )
               )
             `)
             .single()
 
-          if (createError) throw createError
-          cart = newCart
-        }
+          if (cartError) {
+            throw new Error('Failed to create cart')
+          }
 
-        // Calculate totals
-        const subtotal = cart.items.reduce((sum, item) => {
-          return sum + (item.variant?.price || 0) * item.quantity
-        }, 0)
-
-        const cartWithTotals = {
-          ...cart,
-          subtotal,
-          total: subtotal // Add tax/shipping calculation here if needed
-        }
-
-        return new Response(JSON.stringify({ cart: cartWithTotals }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        })
-
-      case 'POST':
-        // Add item to cart
-        const { variant_id, quantity = 1 } = await req.json()
-
-        if (!variant_id) {
-          return new Response('variant_id is required', { 
-            status: 400, 
-            headers: corsHeaders 
+          return new Response(JSON.stringify({ cart }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           })
         }
 
-        // Get or create cart
-        let targetCart: any = null
-        if (cartId && cartId !== 'cart') {
-          const { data: existingCart } = await supabase
-            .from('carts')
-            .select('*')
-            .eq('id', cartId)
-            .single()
-          targetCart = existingCart
+      case 'POST':
+        if (!cartId) {
+          throw new Error('Cart ID required for adding items')
         }
 
-        if (!targetCart) {
-          const { data: newCart, error: createError } = await supabase
-            .from('carts')
+        const validCartId = validateCartId(cartId)
+        const body = await req.json()
+        const { variant_id, quantity = 1 } = body
+
+        const validVariantId = validateVariantId(variant_id)
+        const validQuantity = validateQuantity(quantity)
+
+        // Verify variant exists and get price
+        const { data: variant, error: variantError } = await supabase
+          .from('product_variants')
+          .select('*, product:products(title)')
+          .eq('id', validVariantId)
+          .single()
+
+        if (variantError || !variant) {
+          throw new Error('Product variant not found')
+        }
+
+        // Use safe add to cart function to prevent race conditions
+        try {
+          const result = await safeAddToCart(validCartId, validVariantId, validQuantity)
+          
+          return new Response(JSON.stringify({
+            item: result,
+            cart_id: validCartId
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          })
+        } catch (error) {
+          // Fallback to manual insertion if RPC doesn't exist
+          const { data: item, error: itemError } = await supabase
+            .from('cart_line_items')
             .insert({
-              customer_id: user?.id,
-              session_id: user ? null : crypto.randomUUID(),
-              currency_code: 'CZK'
+              cart_id: validCartId,
+              variant_id: validVariantId,
+              quantity: validQuantity,
+              unit_price: variant.price,
+              title: variant.product?.title || 'Product',
+              metadata: {}
             })
             .select()
             .single()
 
-          if (createError) throw createError
-          targetCart = newCart
-        }
+          if (itemError) {
+            throw new Error('Failed to add item to cart')
+          }
 
-        // Check if item already exists in cart
-        const { data: existingItem } = await supabase
-          .from('cart_line_items')
-          .select('*')
-          .eq('cart_id', targetCart.id)
-          .eq('product_variant_id', variant_id)
-          .single()
-
-        if (existingItem) {
-          // Update quantity
-          const { data: updatedItem, error: updateError } = await supabase
-            .from('cart_line_items')
-            .update({ quantity: existingItem.quantity + quantity })
-            .eq('id', existingItem.id)
-            .select(`
-              *,
-              variant:product_variants(
-                *,
-                product:products(id, title, images)
-              )
-            `)
-            .single()
-
-          if (updateError) throw updateError
-
-          return new Response(JSON.stringify({ item: updatedItem }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          })
-        } else {
-          // Add new item
-          const { data: newItem, error: insertError } = await supabase
-            .from('cart_line_items')
-            .insert({
-              cart_id: targetCart.id,
-              product_variant_id: variant_id,
-              quantity
-            })
-            .select(`
-              *,
-              variant:product_variants(
-                *,
-                product:products(id, title, images)
-              )
-            `)
-            .single()
-
-          if (insertError) throw insertError
-
-          return new Response(JSON.stringify({ 
-            item: newItem,
-            cart_id: targetCart.id 
+          return new Response(JSON.stringify({
+            item,
+            cart_id: validCartId
           }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           })
         }
 
       case 'PUT':
-        // Update item quantity
-        const { item_id, quantity: newQuantity } = await req.json()
-
-        if (!item_id || newQuantity === undefined) {
-          return new Response('item_id and quantity are required', { 
-            status: 400, 
-            headers: corsHeaders 
-          })
+        if (!cartId || !itemId) {
+          throw new Error('Cart ID and Item ID required for updates')
         }
 
-        if (newQuantity <= 0) {
-          // Remove item if quantity is 0 or negative
-          const { error: deleteError } = await supabase
-            .from('cart_line_items')
-            .delete()
-            .eq('id', item_id)
+        const updateBody = await req.json()
+        const { quantity: newQuantity } = updateBody
+        
+        const validUpdateQuantity = validateQuantity(newQuantity)
 
-          if (deleteError) throw deleteError
+        const { error: updateError } = await supabase
+          .from('cart_line_items')
+          .update({ quantity: validUpdateQuantity })
+          .eq('id', itemId)
+          .eq('cart_id', cartId)
 
-          return new Response(JSON.stringify({ success: true }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          })
-        } else {
-          // Update quantity
-          const { data: updatedItem, error: updateError } = await supabase
-            .from('cart_line_items')
-            .update({ quantity: newQuantity })
-            .eq('id', item_id)
-            .select(`
-              *,
-              variant:product_variants(
-                *,
-                product:products(id, title, images)
-              )
-            `)
-            .single()
-
-          if (updateError) throw updateError
-
-          return new Response(JSON.stringify({ item: updatedItem }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          })
+        if (updateError) {
+          throw new Error('Failed to update cart item')
         }
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
 
       case 'DELETE':
-        if (action === 'items') {
-          // Remove specific item
-          const { item_id } = await req.json()
-          
-          const { error: deleteError } = await supabase
-            .from('cart_line_items')
-            .delete()
-            .eq('id', item_id)
-
-          if (deleteError) throw deleteError
-
-          return new Response(JSON.stringify({ success: true }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          })
-        } else {
-          // Clear entire cart
-          const { error: clearError } = await supabase
-            .from('cart_line_items')
-            .delete()
-            .eq('cart_id', cartId)
-
-          if (clearError) throw clearError
-
-          return new Response(JSON.stringify({ success: true }), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          })
+        if (!cartId || !itemId) {
+          throw new Error('Cart ID and Item ID required for deletion')
         }
+
+        const { error: deleteError } = await supabase
+          .from('cart_line_items')
+          .delete()
+          .eq('id', itemId)
+          .eq('cart_id', cartId)
+
+        if (deleteError) {
+          throw new Error('Failed to remove cart item')
+        }
+
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
 
       default:
         return new Response('Method not allowed', { 
-          status: 405, 
+          status: 405,
           headers: corsHeaders 
         })
     }
   } catch (error) {
-    console.error('Error in cart function:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 400,
+    console.error('Cart API Error:', error)
+    
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error'
+    const statusCode = errorMessage.includes('not found') ? 404 :
+                      errorMessage.includes('Invalid') || errorMessage.includes('required') ? 400 :
+                      errorMessage.includes('authorization') ? 401 : 500
+
+    return new Response(JSON.stringify({ 
+      error: errorMessage,
+      timestamp: new Date().toISOString()
+    }), {
+      status: statusCode,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }

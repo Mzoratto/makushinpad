@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { PageProps } from "gatsby";
 import { useI18next, useTranslation } from "gatsby-plugin-react-i18next";
 import Layout from "../components/Layout";
-import MedusaProductCard from "../components/MedusaProductCard";
+import ProductCard from "../components/ProductCard";
 import { LoadingCards, LoadingInline } from "../components/LoadingStates";
 import { Helmet } from "react-helmet";
 import { useCurrency } from "../contexts/CurrencyContext";
-import medusaClient, { MedusaProduct } from "../services/medusaClient";
+import { ProductService, Product } from "../services/supabaseClient";
 
 interface ProductsPageProps extends PageProps {
   data: {
@@ -34,18 +34,18 @@ interface ProductsPageProps extends PageProps {
 const ProductsPage: React.FC<ProductsPageProps> = () => {
   const { t, i18n } = useI18next();
   const { currency } = useCurrency();
-  const [products, setProducts] = useState<MedusaProduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load products from Medusa API
+  // Load products from Supabase API
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const { products } = await medusaClient.getProducts();
+        const { products } = await ProductService.getProducts();
         setProducts(products);
       } catch (err) {
         console.error('Failed to load products:', err);
@@ -99,7 +99,7 @@ const ProductsPage: React.FC<ProductsPageProps> = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
-              <MedusaProductCard
+              <ProductCard
                 key={product.id}
                 product={product}
                 showAddToCart={true}

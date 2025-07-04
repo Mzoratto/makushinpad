@@ -1,6 +1,7 @@
 import React from 'react';
 import { useI18next } from 'gatsby-plugin-react-i18next';
 import { useCurrency, Currency } from '../contexts/CurrencyContext';
+import { safeTranslation } from '../utils/typeUtils';
 
 const CurrencySwitcher: React.FC = () => {
   const { t } = useI18next();
@@ -20,7 +21,7 @@ const CurrencySwitcher: React.FC = () => {
               ? 'bg-white text-primary font-semibold'
               : 'text-white hover:text-gray-200'
           }`}
-          title={t('currency.czech')}
+          title={safeTranslation(t('currency.czech'))}
         >
           CZK
         </button>
@@ -32,7 +33,7 @@ const CurrencySwitcher: React.FC = () => {
               ? 'bg-white text-primary font-semibold'
               : 'text-white hover:text-gray-200'
           }`}
-          title={t('currency.euro')}
+          title={safeTranslation(t('currency.euro'))}
         >
           EUR
         </button>

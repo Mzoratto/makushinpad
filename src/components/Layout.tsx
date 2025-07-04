@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { useI18next, Link } from "gatsby-plugin-react-i18next";
-import LanguageSwitcher from "./LanguageSwitcher";
+import { Link } from "gatsby";
+// import LanguageSwitcher from "./LanguageSwitcher"; // Temporarily disabled
 import CurrencySwitcher from "./CurrencySwitcher";
 import CartButton from "./CartButton";
 import ErrorBoundary from "./ErrorBoundary";
@@ -16,11 +16,14 @@ interface LayoutProps {
 
 // Inner component that uses currency context
 const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
-  const { t, i18n } = useI18next();
+  // const { t, i18n } = useI18next(); // Temporarily disabled
   const { currency } = useCurrency();
 
-  // Get current language
-  const currentLanguage = i18n.language || 'en';
+  // Temporary translation function (fallback)
+  const t = (key: string) => key;
+
+  // Get current language (fallback when i18n is disabled)
+  const currentLanguage = 'en'; // TODO: Re-enable i18n when path-to-regexp issue is fixed
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -67,7 +70,7 @@ const LayoutContent: React.FC<LayoutProps> = ({ children }) => {
                 </ul>
               </nav>
               <div className="flex items-center space-x-4">
-                <LanguageSwitcher />
+                {/* <LanguageSwitcher /> Temporarily disabled */}
                 <CurrencySwitcher />
               </div>
             </div>

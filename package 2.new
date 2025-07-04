@@ -1,0 +1,135 @@
+{
+  "name": "shin-shop",
+  "version": "2.0.0",
+  "private": true,
+  "description": "The Shin Shop - Premium customizable shin pads e-commerce platform built with Gatsby, React, Supabase, and Tailwind CSS.",
+  "author": "The Shin Shop Team <info@shinshop.com>",
+  "homepage": "https://makushinpadshop.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mzoratto/makushinpad.git"
+  },
+  "keywords": [
+    "gatsby",
+    "ecommerce",
+    "shin-pads",
+    "customization",
+    "i18n",
+    "supabase",
+    "tailwindcss",
+    "typescript",
+    "react"
+  ],
+  "engines": {
+    "node": ">=20.0.0 <21.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean && rm -rf .cache",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx --fix",
+    "lint:check": "eslint src --ext .ts,.tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "echo \"Tests not implemented yet\" && exit 0",
+    "test:security": "npm audit --audit-level=moderate",
+    "test:build": "npm run build && npm run serve",
+    "test:connection": "node scripts/test-supabase-connection.js",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:reset": "supabase db reset",
+    "supabase:migrate": "supabase db push",
+    "supabase:functions:deploy": "supabase functions deploy",
+    "supabase:functions:serve": "supabase functions serve",
+    "db:setup": "npm run supabase:reset",
+    "db:seed": "npm run supabase:reset",
+    "dev": "npm run develop",
+    "dev:full": "concurrently \"npm run supabase:start\" \"npm run develop\"",
+    "dev:functions": "concurrently \"npm run supabase:functions:serve\" \"npm run develop\"",
+    "prebuild": "npm run clean && npm run type-check",
+    "postbuild": "echo \"Build completed successfully!\"",
+    "deploy:functions": "npm run supabase:functions:deploy",
+    "deploy:prepare": "npm run test:security && npm run type-check && npm run build",
+    "analyze": "npm run build -- --analyze",
+    "update:deps": "npm update && npm audit fix"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.3",
+    "autoprefixer": "^10.4.16",
+    "gatsby": "^5.14.1",
+    "gatsby-plugin-image": "^3.14.0",
+    "gatsby-plugin-postcss": "^6.14.0",
+    "gatsby-plugin-react-helmet": "^6.14.0",
+    "gatsby-plugin-react-i18next": "^3.0.1",
+    "gatsby-plugin-sharp": "^5.14.0",
+    "gatsby-plugin-typescript": "^5.14.0",
+    "gatsby-source-filesystem": "^5.14.0",
+    "gatsby-transformer-remark": "^6.14.0",
+    "gatsby-transformer-sharp": "^5.14.0",
+    "i18next": "^22.5.1",
+    "konva": "^9.3.20",
+    "postcss": "^8.4.32",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-i18next": "^12.3.1",
+    "react-konva": "^18.2.10",
+    "tailwindcss": "^3.4.1",
+    "use-image": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@types/react-helmet": "^6.1.11",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "concurrently": "^9.2.0",
+    "eslint": "^8.56.0",
+    "eslint-config-gatsby": "^4.14.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "gatsby-cli": "^5.14.0",
+    "prettier": "^3.2.5",
+    "supabase": "^2.30.4",
+    "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "path-to-regexp": "0.1.7",
+    "cookie": "^0.7.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ],
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "printWidth": 100
+  },
+  "eslintConfig": {
+    "extends": [
+      "gatsby",
+      "@typescript-eslint/recommended"
+    ],
+    "rules": {
+      "react/prop-types": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/explicit-function-return-type": "off"
+    }
+  }
+}
